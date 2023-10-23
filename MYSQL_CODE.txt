@@ -245,6 +245,8 @@ Records: 5  Duplicates: 0  Warnings: 0
 
 *****************************************************************************************************************************
 
+Add data staff
+
 mysql> INSERT INTO staff(staff_id,fname,lname,designation,dep_name,email,start_work_date,phone_no) VALUES
     -> (1010,'Subash','Jayasinghe','Dean','ICT','subash@fot.ruh.ac.lk','2016-01-01','075*******'),
     -> (1011,'Nuwan','Laksiri','lecturer','ICT','phpnlaksiri@ictec.ruh.ac.lk','2016-01-01','075*******'),
