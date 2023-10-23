@@ -1,0 +1,246 @@
+Create table student
+
+mysql>  CREATE TABLE STUDENT(
+    ->      reg_no CHAR(6),
+    ->      fname VARCHAR(50),
+    ->      lname VARCHAR(50),
+    ->      address VARCHAR(100),
+    ->      dob DATE,
+    ->      email VARCHAR(100),
+    ->      status VARCHAR(50),
+    ->      phone_no VARCHAR(50),
+    ->      dep_name CHAR(3),
+    -> PRIMARY KEY(reg_no)
+    ->      );
+Query OK, 0 rows affected (0.04 sec)
+
+***************************************************************************************************************************
+
+Create table course_unit
+
+mysql>   CREATE TABLE COURSE_UNIT
+    ->      (
+    ->      course_code CHAR(7),
+    ->      course_name VARCHAR(50),
+    ->      type VARCHAR(50),
+    ->      credits INTEGER,
+    ->      lecturer_incharge VARCHAR(100),
+    ->      lecture_hours INTEGER,
+    ->      PRIMARY KEY(course_code)
+    ->      );
+Query OK, 0 rows affected (0.02 sec)
+
+
+***************************************************************************************************************************
+
+Create table attendance
+
+mysql> CREATE TABLE ATTENDANCE
+    -> (
+    -> attendance_id INT,
+    -> reg_no CHAR(6),
+    -> course_code CHAR(7),
+    -> course_name VARCHAR(50),
+    -> type VARCHAR(50),
+    -> lecture_time_per_session INT,
+    -> date DATE,
+    -> PRIMARY KEY(attendance_id),
+    -> FOREIGN KEY(reg_no) REFERENCES student(reg_no),
+    -> FOREIGN KEY(course_code) REFERENCES course_unit(course_code)
+    -> );
+Query OK, 0 rows affected (0.04 sec)
+
+
+***************************************************************************************************************************
+
+Create table CA_MARKS
+
+mysql> CREATE TABLE CA_MARKS
+    -> (
+    -> ca_id INT,
+    -> reg_no CHAR(6),
+    -> course_code CHAR(7),
+    -> quiz_01 DECIMAL(3,2),
+    -> quiz_02 DECIMAL(3,2),
+    -> quiz_03 DECIMAL(3,2),
+    -> mid_exam DECIMAL(3,2),
+    -> PRIMARY KEY(ca_id),
+    -> FOREIGN KEY(reg_no) REFERENCES student(reg_no),
+    -> FOREIGN KEY(course_code) REFERENCES course_unit(course_code)
+    -> );
+Query OK, 0 rows affected (0.04 sec)
+
+
+***************************************************************************************************************************
+
+Create table quiz_marks
+
+mysql> CREATE TABLE quiz_marks
+    -> (
+    -> quiz_id INT,
+    -> reg_no CHAR(6),
+    -> course_code CHAR(7),
+    -> quiz_01 DECIMAL(3,2),
+    -> quiz_02 DECIMAL(3,2),
+    -> quiz_03 DECIMAL(3,2),
+    -> quiz_04 DECIMAL(3,2),
+    -> PRIMARY KEY(quiz_id),
+    -> FOREIGN KEY(reg_no) REFERENCES student(reg_no),
+    -> FOREIGN KEY(course_code) REFERENCES course_unit(course_code)
+    -> );
+Query OK, 0 rows affected (0.04 sec)
+
+
+***************************************************************************************************************************
+
+Create table Assessment_marks
+
+mysql> CREATE TABLE ASSESSMENT_MARKS
+    -> (
+    -> assessment_id INT,
+    -> reg_no CHAR(6),
+    -> course_code CHAR(7),
+    -> assessment_name VARCHAR(50),
+    -> assessment_marks DECIMAL(3,2),
+    -> PRIMARY KEY(assessment_id),
+    -> FOREIGN KEY(reg_no) REFERENCES student(reg_no),
+    -> FOREIGN KEY(course_code) REFERENCES course_unit(course_code)
+    -> );
+Query OK, 0 rows affected (0.04 sec)
+
+
+***************************************************************************************************************************
+
+Create table mid_marks
+
+mysql> CREATE TABLE mid_marks
+    ->      (
+    ->      id INT,
+    ->      reg_no CHAR(6),
+    ->      course_code CHAR(7),
+    ->      Practical DECIMAL(3,2),
+    ->      Theory DECIMAL(3,2),
+    ->      PRIMARY KEY(id),
+    ->      FOREIGN KEY(reg_no) REFERENCES student(reg_no),
+    ->      FOREIGN KEY(course_code) REFERENCES course_unit(course_code)
+    ->      );
+Query OK, 0 rows affected (0.04 sec)
+
+
+***************************************************************************************************************************
+
+Create table final_marks
+
+mysql> CREATE TABLE final_marks
+    -> (
+    -> id INT,
+    -> reg_no CHAR(6),
+    -> course_code CHAR(7),
+    -> theory DECIMAL(3,2),
+    -> practical DECIMAL(3,2),
+    -> PRIMARY KEY(id),
+    -> FOREIGN KEY(reg_no) REFERENCES student(reg_no),
+    -> FOREIGN KEY(course_code) REFERENCES course_unit(course_code)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+
+***************************************************************************************************************************
+
+Create table staff
+
+mysql> CREATE TABLE STAFF
+    -> (
+    -> staff_id INT,
+    -> fname VARCHAR(50),
+    -> lname VARCHAR(50),
+    -> designation VARCHAR(100),
+    -> dep_name VARCHAR(3),
+    -> email VARCHAR(100),
+    -> start_work_date DATE,
+    -> phone_no VARCHAR(50),
+    -> PRIMARY KEY(staff_id)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+
+***************************************************************************************************************************
+
+Add data for student table
+
+mysql> INSERT INTO student
+    -> VALUES
+    -> ('TG1010', 'Nisal', 'Kumara', 'Galle', '2001-05-12', 'nisal@gmail.com', 'Proper', '077-1178252', 'ICT'),
+    -> ('TG1011', 'Daham', 'Rathnayaka', 'Matara','2001-02-01','daham@gmail.com', 'Proper', '075-3032102', 'ICT'),
+    -> ('TG1012', 'Kumara', 'Rathnapala','Anuradhapura', '2001-06-03', 'kumara@gmail.com', 'Proper', '071-4589522', 'ICT'),
+    -> ('TG1013', 'Tharindu', 'Theekshana','Colombo', '2001-06-15', 'tharindu@gmail.com', 'Proper', '071-4588822', 'ET'),
+    -> ('TG1014', 'Pasindu', 'Naveen','Homagama', '2001-06-13', 'pasindu@gmail.com', 'Proper', '078-4589522', 'BST'),
+    -> ('TG1015', 'Nimali', 'Hansani','Anuradhapura', '2001-04-03', 'nimali@gmail.com', 'Proper', '072-4589522', 'ICT'),
+
+    -> ('TG1016', 'Tharushi', 'Kumari','Matara', '2001-06-23', 'tharushi@gmail.com', 'Proper', '071-2229522', 'ET'),
+    -> ('TG1017', 'Dilshan', 'Samarasinghe','Anuradhapura', '2001-08-03', 'dilshan@gmail.com', 'Proper', '071-4589511', 'BST'),
+    -> ('TG1018', 'Piyumi', 'Botheju', 'Colombo', '2000-02-02', 'piyumi@gmail.com', 'Proper', '071-4999522', 'ICT'),
+    -> ('TG1019', 'Thisuri', 'Heshari','Kandy', '2001-09-03', 'thisuri@gmail.com', 'Proper', '071-4969522', 'ET');
+Query OK, 10 rows affected (0.01 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO student
+    -> VALUES
+    -> ('TG701', 'Keshara', 'Hashan','Kurunegala', '1998-05-08', 'keshara@gmail.com', 'Repeat', '071-4969444', 'ET'),
+    -> ('TG702', 'Deshan', 'Perera','Kandy', '1998-09-03', 'deshan@gmail.com', 'Repeat', '071-7895623', 'ICT'),
+    -> ('TG703', 'Tharindu', 'Prabashwara','Ampara', '1998-10-03', 'tharindu1@gmail.com', 'Repeat', '071-7895583', 'BST'),
+    -> ('TG704', 'Kumari', 'Alponsu','Kandy', '1998-02-17', 'kumari@gmail.com', 'Repeat', '071-6695623', 'ICT'),
+    -> ('TG705', 'Dayana', 'Gamage','Colombo', '1998-09-25', 'dayana@gmail.com', 'Repeat', '070-7895623', 'ET');
+Query OK, 5 rows affected (0.00 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+
+***************************************************************************************************************************
+
+Add data for course_unit
+
+mysql> INSERT INTO course_unit
+    -> VALUES
+    -> ('ENG1222', 'EnglishII', 'Theory', 2, 'Mrs.Hiranya Amarasinghe', 30),
+    -> ('ICT1212', 'Database Management System', 'Theory', 2, 'Mr.Nuwan Laksiri', 30),
+    -> ('ICT1222', 'Database Management Systems Practicum', 'Practical', 2, 'Mr.Nuwan Laksiri', 30),
+    -> ('ICT1233', 'Server-Side Web Development', 'Theory', 3, 'Mrs.Rumeshika W.Aracchi', 30),
+    -> ('ICT1242', 'Computer Architecture', 'Theory', 2, 'Mrs.Nimesha Manage', 30),
+    -> ('ICT1253', 'Computer Networks', 'Theory', 3, 'Mrs.Chanduni Gamage', 30),
+    -> ('TCS1212', 'Fundamentals of Management', 'Theory', 2, 'Mrs.Nilanthi Adikaram', 30),
+    -> ('TMS1233', 'Discrete Mathematics', 'Theory', 3, 'Mr.Harshana Seneviratne', 45);
+Query OK, 8 rows affected (0.01 sec)
+Records: 8  Duplicates: 0  Warnings: 0
+
+
+***************************************************************************************************************************
+
+add data quiz_marks
+
+mysql> INSERT INTO quiz_marks(reg_no, course_code, quiz_01, quiz_02, quiz_03, quiz_04)
+    -> VALUES
+    -> ('TG1010', 'ICT1212', 8.5, 6.5, 7.0, 8.0),
+    -> ('TG1011', 'ICT1222', 5.5, 7.5, 6.5, 9.0),
+    -> ('TG1012', 'ICT1212', 6.5, 7.5, 7.0, 6.0),
+    -> ('TG1010', 'ICT1222', 8.5, 6.0, 7.0, 8.0),
+    -> ('TG1010', 'ICT1253', 6.5, 7.5, 7.5, 8.0);
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+
+***************************************************************************************************************************
+
+Add data mid_marks
+
+mysql> INSERT INTO mid_marks(reg_no, course_code, Practical, Theory)
+    -> VALUES
+    -> ('TG1010', 'ICT1212', NULL, 80.5),
+    -> ('TG1010', 'ICT1222', 50.5, NULL),
+    -> ('TG1011', 'ICT1212', NULL, 70.0),
+    -> ('TG1012', 'ICT1242', NULL, 60.0),
+    -> ('TG1011', 'ICT1222', 65.5, NULL);
+Query OK, 5 rows affected (0.00 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+ 
+
+
