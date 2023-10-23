@@ -243,4 +243,20 @@ Query OK, 5 rows affected (0.00 sec)
 Records: 5  Duplicates: 0  Warnings: 0
  
 
+*****************************************************************************************************************************
+
+mysql> INSERT INTO staff(staff_id,fname,lname,designation,dep_name,email,start_work_date,phone_no) VALUES
+    -> (1010,'Subash','Jayasinghe','Dean','ICT','subash@fot.ruh.ac.lk','2016-01-01','075*******'),
+    -> (1011,'Nuwan','Laksiri','lecturer','ICT','phpnlaksiri@ictec.ruh.ac.lk','2016-01-01','075*******'),
+    -> (1012,'Chanduni','Gamage','Lecturer','ICT','chanduni@ictec.ruh.ac.lk','2017-01-01','075*******'),
+    -> (1013,'Harshana','Senevirathna','Lecturer','ET','harshana@etec.ruh.ac.lk','2017-06-01','075*******'),
+    -> (1014,'Sanjeewani','Thilakarathna','Lecturer','ET','sanjeewani@etec.ruh.ac.lk','2018-06-01','075*******'),
+    -> (1015,'Malsha','Prabuddhi','Lecturer','ICT','malsha@fot.ruh.ac.lk','2018-01-01','075*******'),
+    -> (1016,'Ruwan','Kumara','Assistant','NA','ruwankumara@gmail.com','2016-01-01','075*******'),
+    -> (1017,'Uthpala','Kumanayaka','System Administrator','NA','uthpala@fot.ruh.ac.lk','2016-01-01','075*******'),
+    -> (1018,'Hiruni','Nethmini','Assistant','NA','hirunisathsarani@gmail.com','2017-01-01','075*******'),
+    -> (1019,'Ruwan','Darshana','Assistant','NA','ruwandarshana@gmail.com','2018-08-01','075*******'),
+    -> (1020,'pasindu','dilshan','Assistant','NA','pasindu@gmail.com','2020-09-01','075*******');
+Query OK, 11 rows affected (0.03 sec)
+Records: 11  Duplicates: 0  Warnings: 0
 
