@@ -1,0 +1,95 @@
+**************************************************************************
+Creating user Admin and granting privileges
+
+CREATE USER 'Admin'@'localhost' IDENTIFIED BY 'Admin1234';
+
+GRANT ALL PRIVILEGES ON LMS.* TO 'Admin'@'localhost' WITH GRANT OPTION;
+
+FLUSH PRIVILEGES;
+
+mysql> SHOW GRANTS FOR 'Admin'@'localhost';
++--------------------------------------------------------------------------+
+| Grants for Admin@localhost                                               |
++--------------------------------------------------------------------------+
+| GRANT USAGE ON *.* TO `Admin`@`localhost`                                |
+| GRANT ALL PRIVILEGES ON `lms`.* TO `Admin`@`localhost` WITH GRANT OPTION |
++--------------------------------------------------------------------------+
+2 rows in set (0.00 sec)
+
+*********************************************************************************************
+Creating user Dean and granting privileges
+
+CREATE USER 'Dean'@'localhost' IDENTIFIED BY 'Dean1234';
+
+GRANT ALL PRIVILEGES ON LMS.* TO 'Dean'@'localhost';
+
+FLUSH PRIVILEGES;
+
+mysql> SHOW GRANTS FOR 'Dean'@'localhost';
++-------------------------------------------------------+
+| Grants for Dean@localhost                             |
++-------------------------------------------------------+
+| GRANT USAGE ON *.* TO `Dean`@`localhost`              |
+| GRANT ALL PRIVILEGES ON `lms`.* TO `Dean`@`localhost` |
++-------------------------------------------------------+
+2 rows in set (0.00 sec)
+
+**********************************************************************************************
+Creating user Lecturer and granting privileges
+
+CREATE USER 'Lecturer'@'localhost' IDENTIFIED BY 'Lecture1234';
+
+GRANT ALL PRIVILEGES ON LMS.* TO 'Lecturer'@'localhost';
+
+REVOKE CREATE USER ON *.* FROM 'Lecturer'@'localhost';
+
+FLUSH PRIVILEGES;
+
+mysql> SHOW GRANTS FOR 'Lecturer'@'localhost';
++-----------------------------------------------------------+
+| Grants for Lecture@localhost                              |
++-----------------------------------------------------------+
+| GRANT USAGE ON *.* TO `Lecture`@`localhost`               |
+| GRANT ALL PRIVILEGES ON `lms`.* TO `Lecturer`@`localhost` |
++-----------------------------------------------------------+
+2 rows in set (0.00 sec)
+
+****************************************************************************************************
+Creating user Technical Officer and granting privileges
+
+CREATE USER 'TechnicalOfficer'@'localhost' IDENTIFIED BY 'TO1234';
+
+GRANT SELECT,SHOW VIEW,INSERT,UPDATE ON LMS.* TO 'TechnicalOfficer'@'localhost';
+
+FLUSH PRIVILEGES;
+
+mysql> SHOW GRANTS FOR 'TechnicalOfficer'@'localhost';
++--------------------------------------------------------------------------------------+
+| Grants for TechnicalOfficer@localhost                                                |
++--------------------------------------------------------------------------------------+
+| GRANT USAGE ON *.* TO `TechnicalOfficer`@`localhost`                                 |
+| GRANT SELECT, INSERT, UPDATE, SHOW VIEW ON `lms`.* TO `TechnicalOfficer`@`localhost` |
++--------------------------------------------------------------------------------------+
+2 rows in set (0.00 sec)
+
+#Read, write and update permissions are allowed only for attendance related tables/views.
+**********************************************************************************************************
+Creating user student and granting privileges
+
+CREATE USER 'Student'@'localhost' IDENTIFIED BY 'student1234';
+
+GRANT SELECT,SHOW VIEW ON LMS.* TO 'Student'@'localhost';
+
+FLUSH PRIVILEGES;
+
+mysql> SHOW GRANTS FOR 'Student'@'localhost';
++-------------------------------------------------------------+
+| Grants for Student@localhost                                |
++-------------------------------------------------------------+
+| GRANT USAGE ON *.* TO `Student`@`localhost`                 |
+| GRANT SELECT, SHOW VIEW ON `lms`.* TO `Student`@`localhost` |
++-------------------------------------------------------------+
+2 rows in set (0.00 sec)
+
+Read permission is allowed only for final attendance and final marks/Grades tables/views.
+*************************************************************************************************************
