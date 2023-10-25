@@ -77,7 +77,7 @@ Create table quiz_marks
 
 mysql> CREATE TABLE quiz_marks
     -> (
-    -> quiz_id INT,
+    -> quiz_id INT AUTO_INCREMENT,
     -> reg_no CHAR(6),
     -> course_code CHAR(7),
     -> quiz_01 DECIMAL(3,2),
@@ -115,11 +115,11 @@ Create table mid_marks
 
 mysql> CREATE TABLE mid_marks
     ->      (
-    ->      id INT,
+    ->      id INT AUTO_INCREMENT,
     ->      reg_no CHAR(6),
     ->      course_code CHAR(7),
-    ->      Practical DECIMAL(3,2),
-    ->      Theory DECIMAL(3,2),
+    ->      Practical DECIMAL(6,2),
+    ->      Theory DECIMAL(6,2),
     ->      PRIMARY KEY(id),
     ->      FOREIGN KEY(reg_no) REFERENCES student(reg_no),
     ->      FOREIGN KEY(course_code) REFERENCES course_unit(course_code)
