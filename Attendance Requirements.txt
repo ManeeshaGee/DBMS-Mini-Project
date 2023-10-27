@@ -1,0 +1,232 @@
+**********Attendance Requirements********************
+
+TO COVER >= 80% STUDENTS------------------------------------------------------>
+
+CREATE VIEW student_attendance_percentage1 AS
+SELECT A.reg_no, A.course_code,
+    (SUM(CASE WHEN A.status = 'Present' THEN A.lecture_time_per_session ELSE 0 END) / c.lecture_hours) AS attendance_percentage
+FROM attendance A
+JOIN course_unit c ON A.course_code = c.course_code
+GROUP BY A.reg_no, A.course_code;
+
+DELIMITER //
+CREATE PROCEDURE GetHighAttendanceStudents()
+BEGIN
+    SELECT reg_no, course_code, attendance_percentage
+    FROM student_attendance_percentage1
+    WHERE attendance_percentage >= 0.8;
+END;
+//
+DELIMITER ;
+
+CALL GetHighAttendanceStudents();
+
+< 80% STUDENTS--------------------------------------------------------------->
+
+DELIMITER //
+CREATE PROCEDURE GetLowAttendanceStudents()
+BEGIN
+    SELECT reg_no, course_code, attendance_percentage
+    FROM student_attendance_percentage1
+    WHERE attendance_percentage < 0.8;
+END;
+//
+DELIMITER ;
+
+CALL GetLowAttendanceStudents();
+
+WITH MEDICAL >= 80% STUDENTS-------------------------------------------------->
+
+DELIMITER //
+CREATE PROCEDURE GetHighMedicalAttendanceStudents()
+BEGIN
+    SELECT A.reg_no, A.course_code, 
+    (SUM(CASE WHEN A.status = 'Present' OR A.status = 'Medical Leave' THEN A.lecture_time_per_session ELSE 0 END) / c.lecture_hours) AS attendance_percentage
+    FROM attendance A
+    JOIN course_unit c ON A.course_code = c.course_code
+    GROUP BY A.reg_no, A.course_code
+    HAVING attendance_percentage >= 0.8;
+END;
+//
+DELIMITER ;
+
+CALL GetHighMedicalAttendanceStudents();
+
+WITH MEDICAL < 80% STUDENTS------------------------------------------------->
+
+DELIMITER //
+CREATE PROCEDURE GetLowMedicalAttendanceStudents()
+BEGIN
+    SELECT A.reg_no, A.course_code, 
+    (SUM(CASE WHEN A.status = 'Present' OR A.status = 'Medical Leave' THEN A.lecture_time_per_session ELSE 0 END) / c.lecture_hours) AS attendance_percentage
+    FROM attendance A
+    JOIN course_unit c ON A.course_code = c.course_code
+    GROUP BY A.reg_no, A.course_code
+    HAVING attendance_percentage < 0.8;
+END;
+//
+DELIMITER ;
+
+CALL GetLowMedicalAttendanceStudents();
+
+AS A SUMMARY FOR WHOLE BATCH-------------------------------------------->
+1. by giving the course code
+
+DELIMITER //
+CREATE PROCEDURE GetBatchAttendanceSummary_courseWise(IN courseCode CHAR(7))
+BEGIN
+    -- Query to retrieve the batch summary by course code
+    SELECT A.reg_no,
+        (SUM(CASE WHEN A.status = 'Present' THEN A.lecture_time_per_session ELSE 0 END) / MAX(c.lecture_hours)) AS attendance_percentage,
+        CASE WHEN (SUM(CASE WHEN A.status = 'Present' THEN A.lecture_time_per_session ELSE 0 END) / MAX(c.lecture_hours)) >= 0.8 THEN 'Eligible' ELSE 'Not Eligible' END AS eligibility
+    FROM attendance A
+    JOIN course_unit c ON A.course_code = c.course_code
+    WHERE A.course_code = courseCode
+    GROUP BY A.reg_no;
+END;
+//
+DELIMITER ;
+
+CALL GetBatchAttendanceSummary_courseWise();
+
+2. For whole batch and all the subjects
+
+DELIMITER //
+CREATE PROCEDURE GetBatchAttendanceForallsubjectswitheligibility()
+BEGIN
+    SELECT A.reg_no,c.course_code,
+    (SUM(CASE WHEN A.status = "Present" OR A.status = "Medical Leave" THEN A.lecture_time_per_session ELSE 0 END)/c.lecture_hours) AS Attendance_percentage,
+    CASE WHEN(SUM(CASE WHEN A.status = "Present" OR A.status = "Medical Leave" THEN A.lecture_time_per_session ELSE 0 END)/(c.lecture_hours)) >= 0.8 THEN 'Eligibity' ELSE 'NOT Eligibity' END AS Eligibity 
+    FROM attendance A
+    JOIN course_unit c ON A.course_code = c.course_code
+    WHERE c.course_code = A.course_code
+    GROUP BY A.reg_no,c.course_code;
+END;
+//
+DELIMITER ;
+
+as individuals by giving the registration number-------------------------------
+
+DELIMITER //
+CREATE PROCEDURE GetSummaryofAttendanceGivingRegistrationNumber(IN regno CHAR(6))
+BEGIN
+     SELECT A.reg_no,c.course_code,
+    (SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/c.lecture_hours) AS Attendance_percentage,
+    CASE WHEN(SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/(c.lecture_hours)) >= 0.8 THEN 'Eligibity' ELSE 'NOT Eligibity' END AS Eligibity 
+    FROM attendance A
+    JOIN course_unit c ON A.course_code = c.course_code
+    WHERE c.course_code = A.course_code
+    AND A.reg_no = regno
+    GROUP BY A.reg_no,c.course_code;
+END;
+//
+DELIMITER ;
+
+as individuals by giving the registration no and course code-----------------------------------------------------
+
+DELIMITER //
+CREATE PROCEDURE GetAttendanceGivingRegistrationNumberandCourseCode(IN regno CHAR(6), ccode CHAR(7))
+BEGIN
+     SELECT A.reg_no,c.course_code,
+    (SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/c.lecture_hours) AS Attendance_percentage,
+    CASE WHEN(SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/(c.lecture_hours)) >= 0.8 THEN 'Eligibity' ELSE 'NOT Eligibity' END AS Eligibity 
+    FROM attendance A
+    JOIN course_unit c ON A.course_code = c.course_code
+    WHERE c.course_code = A.course_code
+    AND A.reg_no = regno
+    AND C.course_code = ccode 
+    GROUP BY A.reg_no,c.course_code;
+END;
+//
+DELIMITER ;
+
+For the whole batch for all the subjects with percentage and eligibilty-----------------------------------------------
+
+DELIMITER //
+CREATE PROCEDURE GetAttendanceForWholeBatch()
+BEGIN
+     SELECT A.reg_no,c.course_code,A.type,
+    (SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/c.lecture_hours) AS Attendance_percentage,
+    CASE WHEN(SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/(c.lecture_hours)) >= 0.8 THEN 'Eligibity' ELSE 'NOT Eligibity' END AS Eligibity 
+    FROM attendance A
+    JOIN course_unit c ON A.course_code = c.course_code
+    WHERE c.course_code = A.course_code
+    GROUP BY A.reg_no,c.course_code,A.type;
+END;
+//
+DELIMITER ;
+
+When there is both theory and practical for a subject there should be a way to check------------------------------------------
+attendance only for theory, only for practical and as combined
+
+For theory or practical part for each individual
+
+DELIMITER // 
+CREATE PROCEDURE GetAttGivingRegNumberandCourseCodeForTheoryorPractical(IN regno CHAR(6), ccode CHAR(7),t VARCHAR(25))
+BEGIN
+     SELECT A.reg_no,c.course_code,
+    (SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/c.lecture_hours) AS Attendance_percentage,
+    CASE WHEN(SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/(c.lecture_hours)) >= 0.8 THEN 'Eligibity' ELSE 'NOT Eligibity' END AS Eligibity 
+    FROM attendance A
+    JOIN course_unit c ON A.course_code = c.course_code
+    WHERE c.course_code = A.course_code
+    AND A.reg_no = regno
+    AND C.course_code = ccode 
+    AND A.type = t
+    GROUP BY A.reg_no,c.course_code;
+END;
+//
+DELIMITER ;
+
+For both theory and practical parts for each individual
+
+
+DELIMITER // 
+CREATE PROCEDURE GetAttGivingRegNumberandCourseCodeForTheoryAndPractical(IN regno CHAR(6), ccode CHAR(7))
+BEGIN
+     SELECT A.reg_no,c.course_code,A.type,
+    (SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/c.lecture_hours) AS Attendance_percentage,
+    CASE WHEN(SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/(c.lecture_hours)) >= 0.8 THEN 'Eligibity' ELSE 'NOT Eligibity' END AS Eligibity 
+    FROM attendance A
+    JOIN course_unit c ON A.course_code = c.course_code
+    WHERE c.course_code = A.course_code
+    AND A.reg_no = regno
+    AND C.course_code = ccode 
+    GROUP BY A.reg_no,c.course_code,A.type;
+END;
+//
+DELIMITER ;
+
+For theory or practical part to each course unit
+
+DELIMITER // 
+CREATE PROCEDURE GetAttGivingCourseCodeForTheoryOrPractical(ccode CHAR(7),t VARCHAR(25))
+BEGIN
+     SELECT A.reg_no,c.course_code,A.type,
+    (SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/c.lecture_hours) AS Attendance_percentage
+    FROM attendance A
+    JOIN course_unit c ON A.course_code = c.course_code
+    WHERE c.course_code = A.course_code
+    AND C.course_code = ccode 
+    AND A.type = t
+    GROUP BY A.reg_no,c.course_code,A.type;
+END;
+//
+DELIMITER ;
+
+For theory and practical to each course unit
+
+DELIMITER // 
+CREATE PROCEDURE GetAttGivingCourseCodeForTheoryAndPractical(ccode CHAR(7))
+BEGIN
+     SELECT A.reg_no,c.course_code,A.type,
+    (SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/c.lecture_hours) AS Attendance_percentage
+    FROM attendance A
+    JOIN course_unit c ON A.course_code = c.course_code
+    WHERE c.course_code = A.course_code
+    AND C.course_code = ccode 
+    GROUP BY A.reg_no,c.course_code,A.type;
+END;
+//
+DELIMITER 
+
