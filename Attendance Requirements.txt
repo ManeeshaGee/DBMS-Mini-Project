@@ -105,7 +105,7 @@ END;
 //
 DELIMITER ;
 
-as individuals by giving the registration number-------------------------------
+as individuals by giving the registration number---------------------------------------------------------->
 
 DELIMITER //
 CREATE PROCEDURE GetSummaryofAttendanceGivingRegistrationNumber(IN regno CHAR(6))
@@ -122,7 +122,7 @@ END;
 //
 DELIMITER ;
 
-as individuals by giving the registration no and course code-----------------------------------------------------
+as individuals by giving the registration no and course code----------------------------------------------------->
 
 DELIMITER //
 CREATE PROCEDURE GetAttendanceGivingRegistrationNumberandCourseCode(IN regno CHAR(6), ccode CHAR(7))
@@ -140,7 +140,7 @@ END;
 //
 DELIMITER ;
 
-For the whole batch for all the subjects with percentage and eligibilty-----------------------------------------------
+For the whole batch for all the subjects with percentage and eligibilty----------------------------------------------->
 
 DELIMITER //
 CREATE PROCEDURE GetAttendanceForWholeBatch()
@@ -156,7 +156,7 @@ END;
 //
 DELIMITER ;
 
-When there is both theory and practical for a subject there should be a way to check------------------------------------------
+When there is both theory and practical for a subject there should be a way to check------------------------------------------>
 attendance only for theory, only for practical and as combined
 
 For theory or practical part for each individual
@@ -178,7 +178,7 @@ END;
 //
 DELIMITER ;
 
-For both theory and practical parts for each individual
+For both theory and practical parts for each individual--------------------------------------------------------------->
 
 
 DELIMITER // 
@@ -197,7 +197,7 @@ END;
 //
 DELIMITER ;
 
-For theory or practical part to each course unit
+For theory or practical part to each course unit----------------------------------------------------------------------->
 
 DELIMITER // 
 CREATE PROCEDURE GetAttGivingCourseCodeForTheoryOrPractical(ccode CHAR(7),t VARCHAR(25))
@@ -214,7 +214,7 @@ END;
 //
 DELIMITER ;
 
-For theory and practical to each course unit
+For theory and practical to each course unit---------------------------------------------------------------------------------->
 
 DELIMITER // 
 CREATE PROCEDURE GetAttGivingCourseCodeForTheoryAndPractical(ccode CHAR(7))
