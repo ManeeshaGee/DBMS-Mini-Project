@@ -105,7 +105,7 @@ END;
 //
 DELIMITER ;
 
-as individuals by giving the registration number---------------------------------------------------------->
+as individuals by giving the registration number-------------------------------
 
 DELIMITER //
 CREATE PROCEDURE GetSummaryofAttendanceGivingRegistrationNumber(IN regno CHAR(6))
@@ -122,7 +122,7 @@ END;
 //
 DELIMITER ;
 
-as individuals by giving the registration no and course code----------------------------------------------------->
+as individuals by giving the registration no and course code-----------------------------------------------------
 
 DELIMITER //
 CREATE PROCEDURE GetAttendanceGivingRegistrationNumberandCourseCode(IN regno CHAR(6), ccode CHAR(7))
@@ -140,7 +140,7 @@ END;
 //
 DELIMITER ;
 
-For the whole batch for all the subjects with percentage and eligibilty----------------------------------------------->
+For the whole batch for all the subjects with percentage and eligibilty-----------------------------------------------
 
 DELIMITER //
 CREATE PROCEDURE GetAttendanceForWholeBatch()
@@ -156,37 +156,84 @@ END;
 //
 DELIMITER ;
 
-When there is both theory and practical for a subject there should be a way to check------------------------------------------>
+When there is both theory and practical for a subject there should be a way to check------------------------------------------
 attendance only for theory, only for practical and as combined
 
-For theory or practical part for each individual
+For theory or practical or both parts for each individual(with eligibilty)
+
+DELIMITER //
+CREATE PROCEDURE GetAttGivingRegNumberandCourseCodeForTheoryAndPracticalEleg(IN regno CHAR(6), ccode CHAR(7), t VARCHAR(25))
+BEGIN
+    SELECT A.reg_no, c.course_code, A.type,
+    (SUM(CASE 
+        WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END) / c.lecture_hours) AS Attendance_percentage,
+    CASE
+        WHEN (SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END) / c.lecture_hours) >= 0.8 THEN 'Eligibility' 
+        ELSE 'NOT Eligibility' END AS Eligibility 
+    FROM attendance A
+    JOIN course_unit c ON A.course_code = c.course_code
+    WHERE c.course_code = A.course_code
+    AND A.reg_no = regno
+    AND c.course_code = ccode
+    AND ((t = 'Theory' AND A.type = 'Theory')
+         OR (t = 'Practical' AND A.type = 'Practical')
+         OR (t = 'Theory and Practical' AND (A.type = 'Theory' OR A.type = 'Practical'))
+         OR (t = 'Practical and theory' AND (A.type = 'Theory' OR A.type = 'Practical')))
+    GROUP BY A.reg_no, c.course_code, A.type;
+END;
+//
+DELIMITER ;
+
+
+For theory or practical or both parts for each individual(without eligibilty)
 
 DELIMITER // 
-CREATE PROCEDURE GetAttGivingRegNumberandCourseCodeForTheoryorPractical(IN regno CHAR(6), ccode CHAR(7),t VARCHAR(25))
+CREATE PROCEDURE GetAttGivingRegNumberandCourseCodeForTheoryAndPractical(IN regno CHAR(6), ccode CHAR(7),t VARCHAR(25))
 BEGIN
-     SELECT A.reg_no,c.course_code,
-    (SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/c.lecture_hours) AS Attendance_percentage,
-    CASE WHEN(SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/(c.lecture_hours)) >= 0.8 THEN 'Eligibity' ELSE 'NOT Eligibity' END AS Eligibity 
+     SELECT A.reg_no,c.course_code,A.type,
+    (SUM(CASE 
+          WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/c.lecture_hours) AS Attendance_percentage
     FROM attendance A
     JOIN course_unit c ON A.course_code = c.course_code
     WHERE c.course_code = A.course_code
     AND A.reg_no = regno
     AND C.course_code = ccode 
     AND A.type = t
-    GROUP BY A.reg_no,c.course_code;
+    GROUP BY A.reg_no,c.course_code,A.type;
 END;
 //
 DELIMITER ;
 
-For both theory and practical parts for each individual--------------------------------------------------------------->
+For both theory and practical parts for each individual(with elegibity)
+
+DELIMITER // 
+CREATE PROCEDURE GetAttGivingRegNumberandCourseCodeForTheoryAndPracticalElig(IN regno CHAR(6), ccode CHAR(7),t VARCHAR(25))
+BEGIN
+     SELECT A.reg_no,c.course_code,A.type,
+    (SUM(CASE 
+        WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/c.lecture_hours) AS Attendance_percentage,
+    CASE 
+       WHEN(SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/(c.lecture_hours)) >= 0.8 THEN 'Eligibity' ELSE 'NOT Eligibity' END AS Eligibity 
+    FROM attendance A
+    JOIN course_unit c ON A.course_code = c.course_code
+    WHERE c.course_code = A.course_code
+    AND A.reg_no = regno
+    AND C.course_code = ccode 
+    GROUP BY A.reg_no,c.course_code,A.type;
+END;
+//
+DELIMITER ;
+
+
+For both theory and practical parts for each individual(without elegibity)
 
 
 DELIMITER // 
 CREATE PROCEDURE GetAttGivingRegNumberandCourseCodeForTheoryAndPractical(IN regno CHAR(6), ccode CHAR(7))
 BEGIN
      SELECT A.reg_no,c.course_code,A.type,
-    (SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/c.lecture_hours) AS Attendance_percentage,
-    CASE WHEN(SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/(c.lecture_hours)) >= 0.8 THEN 'Eligibity' ELSE 'NOT Eligibity' END AS Eligibity 
+    (SUM(CASE 
+         WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/c.lecture_hours) AS Attendance_percentage
     FROM attendance A
     JOIN course_unit c ON A.course_code = c.course_code
     WHERE c.course_code = A.course_code
@@ -197,34 +244,46 @@ END;
 //
 DELIMITER ;
 
-For theory or practical part to each course unit----------------------------------------------------------------------->
+For theory or practical or both parts to each course unit(with eligibity)
 
 DELIMITER // 
-CREATE PROCEDURE GetAttGivingCourseCodeForTheoryOrPractical(ccode CHAR(7),t VARCHAR(25))
+CREATE PROCEDURE GetAttGivingCourseCodeForTheoryOrPracticalElig(ccode CHAR(7),t VARCHAR(25))
 BEGIN
      SELECT A.reg_no,c.course_code,A.type,
-    (SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/c.lecture_hours) AS Attendance_percentage
+    (SUM(CASE 
+        WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/c.lecture_hours) AS Attendance_percentage,
+    CASE
+        WHEN (SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END) / c.lecture_hours) >= 0.8 THEN 'Eligibility'
+        ELSE 'NOT Eligibility' END AS Eligibility 
     FROM attendance A
     JOIN course_unit c ON A.course_code = c.course_code
     WHERE c.course_code = A.course_code
     AND C.course_code = ccode 
-    AND A.type = t
+    AND ((t = 'Theory' AND A.type = 'Theory')
+         OR (t = 'Practical' AND A.type = 'Practical')
+         OR (t = 'Theory and Practical' AND (A.type = 'Theory' OR A.type = 'Practical'))
+         OR (t = 'Practical and theory' AND (A.type = 'Theory' OR A.type = 'Practical')))
     GROUP BY A.reg_no,c.course_code,A.type;
 END;
 //
 DELIMITER ;
 
-For theory and practical to each course unit---------------------------------------------------------------------------------->
+For theory and practical to each course unit(without eligibity)
 
 DELIMITER // 
-CREATE PROCEDURE GetAttGivingCourseCodeForTheoryAndPractical(ccode CHAR(7))
+CREATE PROCEDURE GetAttGivingCourseCodeForTheoryOrPractical(ccode CHAR(7),t VARCHAR(25))
 BEGIN
      SELECT A.reg_no,c.course_code,A.type,
-    (SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/c.lecture_hours) AS Attendance_percentage
+    (SUM(CASE 
+        WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/c.lecture_hours) AS Attendance_percentage
     FROM attendance A
     JOIN course_unit c ON A.course_code = c.course_code
     WHERE c.course_code = A.course_code
     AND C.course_code = ccode 
+    AND ((t = 'Theory' AND A.type = 'Theory')
+         OR (t = 'Practical' AND A.type = 'Practical')
+         OR (t = 'Theory and Practical' AND (A.type = 'Theory' OR A.type = 'Practical'))
+         OR (t = 'Practical and theory' AND (A.type = 'Theory' OR A.type = 'Practical')))
     GROUP BY A.reg_no,c.course_code,A.type;
 END;
 //
