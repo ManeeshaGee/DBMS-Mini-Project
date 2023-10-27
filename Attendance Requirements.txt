@@ -347,5 +347,5 @@ BEGIN
     GROUP BY A.reg_no,c.course_code;
 END;
 //
-DELIMITER 
+DELIMITER ;
 
