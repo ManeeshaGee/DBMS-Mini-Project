@@ -37,13 +37,15 @@ Create table attendance
 
 mysql> CREATE TABLE ATTENDANCE
     -> (
-    -> attendance_id INT,
+    -> attendance_id INT AUTO_INCREMENT,
     -> reg_no CHAR(6),
     -> course_code CHAR(7),
     -> course_name VARCHAR(50),
     -> type VARCHAR(50),
     -> lecture_time_per_session INT,
     -> date DATE,
+    ->Week INT,
+    ->type VARCHAR(25),
     -> PRIMARY KEY(attendance_id),
     -> FOREIGN KEY(reg_no) REFERENCES student(reg_no),
     -> FOREIGN KEY(course_code) REFERENCES course_unit(course_code)
