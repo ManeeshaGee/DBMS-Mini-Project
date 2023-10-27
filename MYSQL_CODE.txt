@@ -36,13 +36,13 @@ Query OK, 0 rows affected (0.02 sec)
 Create table attendance
 
 mysql> CREATE TABLE ATTENDANCE
-    -> (
+    ->  (
     -> attendance_id INT AUTO_INCREMENT,
     -> reg_no CHAR(6),
     -> course_code CHAR(7),
-    -> course_name VARCHAR(50),
     -> lecture_time_per_session INT,
     -> date DATE,
+    -> status varchar(20),
     -> Week INT,
     -> type VARCHAR(25),
     -> PRIMARY KEY(attendance_id),
