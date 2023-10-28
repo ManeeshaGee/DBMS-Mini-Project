@@ -90,7 +90,7 @@ CALL GetBatchAttendanceSummary_courseWise();
 2. For whole batch and all the subjects
 
 DELIMITER //
-CREATE PROCEDURE GetBatchAttendanceForallsubjectswitheligibility1()
+CREATE PROCEDURE GetBatchAttendanceForallsubjectswitheligibility()
 BEGIN
     SELECT A.reg_no,c.course_code,A.type,
     (SUM(CASE WHEN A.status = "Present" OR A.status = "Medical Leave" THEN A.lecture_time_per_session ELSE 0 END)/c.lecture_hours)*100 AS Attendance_percentage,
