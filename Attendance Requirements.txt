@@ -1,88 +1,86 @@
-**********Attendance Requirements********************
+/////////////////////////////////////Attendance Requirements/////////////////////////////////////
 
 TO COVER >= 80% STUDENTS------------------------------------------------------>
-
-CREATE VIEW student_attendance_percentage1 AS
-SELECT A.reg_no, A.course_code,
-    (SUM(CASE WHEN A.status = 'Present' THEN A.lecture_time_per_session ELSE 0 END) / c.lecture_hours) AS attendance_percentage
-FROM attendance A
-JOIN course_unit c ON A.course_code = c.course_code
-GROUP BY A.reg_no, A.course_code;
 
 DELIMITER //
 CREATE PROCEDURE GetHighAttendanceStudents()
 BEGIN
-    SELECT reg_no, course_code, attendance_percentage
-    FROM student_attendance_percentage1
-    WHERE attendance_percentage >= 0.8;
+    SELECT A.reg_no, A.course_code,A.type, 
+    (SUM(CASE WHEN A.status = 'Present' THEN A.lecture_time_per_session ELSE 0 END) / c.lecture_hours)*100 AS attendance_percentage
+    FROM Attendance A
+    JOIN course_unit c ON A.course_code = c.course_code
+    GROUP BY A.reg_no, A.course_code, A.type
+    HAVING attendance_percentage >= 80.00;
 END;
 //
 DELIMITER ;
 
 CALL GetHighAttendanceStudents();
 
-< 80% STUDENTS--------------------------------------------------------------->
+TO COVER < 80% STUDENTS--------------------------------------------------------------->
 
 DELIMITER //
 CREATE PROCEDURE GetLowAttendanceStudents()
 BEGIN
-    SELECT reg_no, course_code, attendance_percentage
-    FROM student_attendance_percentage1
-    WHERE attendance_percentage < 0.8;
+    SELECT A.reg_no, A.course_code,A.type, 
+    (SUM(CASE WHEN A.status = 'Present' THEN A.lecture_time_per_session ELSE 0 END) / c.lecture_hours)*100 AS attendance_percentage
+    FROM Attendance A
+    JOIN course_unit c ON A.course_code = c.course_code
+    GROUP BY A.reg_no, A.course_code, A.type
+    HAVING attendance_percentage < 80.00;
 END;
 //
 DELIMITER ;
 
 CALL GetLowAttendanceStudents();
 
-WITH MEDICAL >= 80% STUDENTS-------------------------------------------------->
+WITH MEDICALS >= 80% STUDENTS--------------------------------------------------------->
 
 DELIMITER //
 CREATE PROCEDURE GetHighMedicalAttendanceStudents()
 BEGIN
-    SELECT A.reg_no, A.course_code, 
-    (SUM(CASE WHEN A.status = 'Present' OR A.status = 'Medical Leave' THEN A.lecture_time_per_session ELSE 0 END) / c.lecture_hours) AS attendance_percentage
+    SELECT A.reg_no, A.course_code,A.type,
+    (SUM(CASE WHEN A.status = 'Present' OR A.status = 'Medical Leave' THEN A.lecture_time_per_session ELSE 0 END) / c.lecture_hours)*100 AS attendance_percentage
     FROM attendance A
     JOIN course_unit c ON A.course_code = c.course_code
-    GROUP BY A.reg_no, A.course_code
-    HAVING attendance_percentage >= 0.8;
+    GROUP BY A.reg_no, A.course_code,A.type
+    HAVING attendance_percentage >= 80.00;
 END;
 //
 DELIMITER ;
 
 CALL GetHighMedicalAttendanceStudents();
 
-WITH MEDICAL < 80% STUDENTS------------------------------------------------->
+WITH MEDICAL < 80% STUDENTS------------------------------------------------------------->
 
 DELIMITER //
 CREATE PROCEDURE GetLowMedicalAttendanceStudents()
 BEGIN
-    SELECT A.reg_no, A.course_code, 
-    (SUM(CASE WHEN A.status = 'Present' OR A.status = 'Medical Leave' THEN A.lecture_time_per_session ELSE 0 END) / c.lecture_hours) AS attendance_percentage
+    SELECT A.reg_no, A.course_code,A.type, 
+    (SUM(CASE WHEN A.status = 'Present' OR A.status = 'Medical Leave' THEN A.lecture_time_per_session ELSE 0 END) / c.lecture_hours)*100 AS attendance_percentage
     FROM attendance A
     JOIN course_unit c ON A.course_code = c.course_code
-    GROUP BY A.reg_no, A.course_code
-    HAVING attendance_percentage < 0.8;
+    GROUP BY A.reg_no, A.course_code,A.type
+    HAVING attendance_percentage < 80.00;
 END;
 //
 DELIMITER ;
 
 CALL GetLowMedicalAttendanceStudents();
 
-AS A SUMMARY FOR WHOLE BATCH-------------------------------------------->
+AS A SUMMARY FOR WHOLE BATCH--------------------------------------------------------------->
 1. by giving the course code
 
 DELIMITER //
 CREATE PROCEDURE GetBatchAttendanceSummary_courseWise(IN courseCode CHAR(7))
 BEGIN
-    -- Query to retrieve the batch summary by course code
-    SELECT A.reg_no,
-        (SUM(CASE WHEN A.status = 'Present' THEN A.lecture_time_per_session ELSE 0 END) / MAX(c.lecture_hours)) AS attendance_percentage,
-        CASE WHEN (SUM(CASE WHEN A.status = 'Present' THEN A.lecture_time_per_session ELSE 0 END) / MAX(c.lecture_hours)) >= 0.8 THEN 'Eligible' ELSE 'Not Eligible' END AS eligibility
+    SELECT A.reg_no,A.type,
+        (SUM(CASE WHEN A.status = 'Present' THEN A.lecture_time_per_session ELSE 0 END) / c.lecture_hours)*100 AS attendance_percentage,
+        CASE WHEN (SUM(CASE WHEN A.status = 'Present' THEN A.lecture_time_per_session ELSE 0 END) / c.lecture_hours)*100 >= 80.00 THEN 'Eligible' ELSE 'Not Eligible' END AS eligibility
     FROM attendance A
     JOIN course_unit c ON A.course_code = c.course_code
     WHERE A.course_code = courseCode
-    GROUP BY A.reg_no;
+    GROUP BY A.reg_no,A.type;
 END;
 //
 DELIMITER ;
@@ -94,60 +92,9 @@ CALL GetBatchAttendanceSummary_courseWise();
 DELIMITER //
 CREATE PROCEDURE GetBatchAttendanceForallsubjectswitheligibility()
 BEGIN
-    SELECT A.reg_no,c.course_code,
-    (SUM(CASE WHEN A.status = "Present" OR A.status = "Medical Leave" THEN A.lecture_time_per_session ELSE 0 END)/c.lecture_hours) AS Attendance_percentage,
-    CASE WHEN(SUM(CASE WHEN A.status = "Present" OR A.status = "Medical Leave" THEN A.lecture_time_per_session ELSE 0 END)/(c.lecture_hours)) >= 0.8 THEN 'Eligibity' ELSE 'NOT Eligibity' END AS Eligibity 
-    FROM attendance A
-    JOIN course_unit c ON A.course_code = c.course_code
-    WHERE c.course_code = A.course_code
-    GROUP BY A.reg_no,c.course_code;
-END;
-//
-DELIMITER ;
-
-as individuals by giving the registration number-------------------------------
-
-DELIMITER //
-CREATE PROCEDURE GetSummaryofAttendanceGivingRegistrationNumber(IN regno CHAR(6))
-BEGIN
-     SELECT A.reg_no,c.course_code,
-    (SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/c.lecture_hours) AS Attendance_percentage,
-    CASE WHEN(SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/(c.lecture_hours)) >= 0.8 THEN 'Eligibity' ELSE 'NOT Eligibity' END AS Eligibity 
-    FROM attendance A
-    JOIN course_unit c ON A.course_code = c.course_code
-    WHERE c.course_code = A.course_code
-    AND A.reg_no = regno
-    GROUP BY A.reg_no,c.course_code;
-END;
-//
-DELIMITER ;
-
-as individuals by giving the registration no and course code-----------------------------------------------------
-
-DELIMITER //
-CREATE PROCEDURE GetAttendanceGivingRegistrationNumberandCourseCode(IN regno CHAR(6), ccode CHAR(7))
-BEGIN
-     SELECT A.reg_no,c.course_code,
-    (SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/c.lecture_hours) AS Attendance_percentage,
-    CASE WHEN(SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/(c.lecture_hours)) >= 0.8 THEN 'Eligibity' ELSE 'NOT Eligibity' END AS Eligibity 
-    FROM attendance A
-    JOIN course_unit c ON A.course_code = c.course_code
-    WHERE c.course_code = A.course_code
-    AND A.reg_no = regno
-    AND C.course_code = ccode 
-    GROUP BY A.reg_no,c.course_code;
-END;
-//
-DELIMITER ;
-
-For the whole batch for all the subjects with percentage and eligibilty-----------------------------------------------
-
-DELIMITER //
-CREATE PROCEDURE GetAttendanceForWholeBatch()
-BEGIN
-     SELECT A.reg_no,c.course_code,A.type,
-    (SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/c.lecture_hours) AS Attendance_percentage,
-    CASE WHEN(SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/(c.lecture_hours)) >= 0.8 THEN 'Eligibity' ELSE 'NOT Eligibity' END AS Eligibity 
+    SELECT A.reg_no,c.course_code,A.type,
+    (SUM(CASE WHEN A.status = "Present" OR A.status = "Medical Leave" THEN A.lecture_time_per_session ELSE 0 END)/c.lecture_hours)*100 AS Attendance_percentage,
+    CASE WHEN(SUM(CASE WHEN A.status = "Present" OR A.status = "Medical Leave" THEN A.lecture_time_per_session ELSE 0 END)/(c.lecture_hours))*100 >= 80.00 THEN 'Eligibity' ELSE 'NOT Eligibity' END AS Eligibity 
     FROM attendance A
     JOIN course_unit c ON A.course_code = c.course_code
     WHERE c.course_code = A.course_code
@@ -156,19 +103,67 @@ END;
 //
 DELIMITER ;
 
-When there is both theory and practical for a subject there should be a way to check------------------------------------------
-attendance only for theory, only for practical and as combined
-
-For theory or practical for each individuals(with eligibilty)
+3. as individuals by giving the registration number
 
 DELIMITER //
-CREATE PROCEDURE GetAttGivingRegNumberandCourseCodeForTheoryAndPracticalEleg(IN regno CHAR(6), ccode CHAR(7), t VARCHAR(25))
+CREATE PROCEDURE GetSummaryofAttendanceGivingRegistrationNumber(IN regno CHAR(6))
+BEGIN
+     SELECT A.reg_no,c.course_code,A.type,
+    (SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/c.lecture_hours) AS Attendance_percentage,
+    CASE WHEN(SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/(c.lecture_hours))*100 >= 80.00 THEN 'Eligibity' ELSE 'NOT Eligibity' END AS Eligibity 
+    FROM attendance A
+    JOIN course_unit c ON A.course_code = c.course_code
+    WHERE c.course_code = A.course_code
+    AND A.reg_no = regno
+    GROUP BY A.reg_no,c.course_code,A.type;
+END;
+//
+DELIMITER ;
+
+4.as individuals by giving the registration no and course code-----------------------------------------------------
+
+DELIMITER //
+CREATE PROCEDURE GetAttendanceGivingRegistrationNumberandCourseCode(IN regno CHAR(6), ccode CHAR(7))
+BEGIN
+     SELECT A.reg_no,c.course_code,A.type,
+    (SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/c.lecture_hours)*100 AS Attendance_percentage,
+    CASE WHEN(SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/(c.lecture_hours))*100 >= 80.00 THEN 'Eligibity' ELSE 'NOT Eligibity' END AS Eligibity 
+    FROM attendance A
+    JOIN course_unit c ON A.course_code = c.course_code
+    WHERE c.course_code = A.course_code
+    AND A.reg_no = regno
+    AND C.course_code = ccode 
+    GROUP BY A.reg_no,c.course_code,A.type;
+END;
+//
+DELIMITER;
+
+For the whole batch for all the subjects with percentage and eligibilty-----------------------------------------------
+
+DELIMITER //
+CREATE PROCEDURE GetAttendanceForWholeBatch()
+BEGIN
+     SELECT A.reg_no,c.course_code,A.type,
+    (SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/c.lecture_hours)*100 AS Attendance_percentage,
+    CASE WHEN(SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/(c.lecture_hours))*100 >= 80.00 THEN 'Eligibity' ELSE 'NOT Eligibity' END AS Eligibity 
+    FROM attendance A
+    JOIN course_unit c ON A.course_code = c.course_code
+    WHERE c.course_code = A.course_code
+    GROUP BY A.reg_no,c.course_code,A.type;
+END;
+//
+DELIMITER ;
+
+--To Get Attendance Percentage and Eligibility When a subject has theory and practical as separate to each other
+
+DELIMITER //
+CREATE PROCEDURE Get_Att_Elig_For_Sub_Theo_OR_Prac_Each(IN regno CHAR(6), ccode CHAR(7), t VARCHAR(25))
 BEGIN
     SELECT A.reg_no, c.course_code, A.type,
     ((SUM(CASE 
         WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END) / c.lecture_hours)*100) AS Attendance_percentage,
     CASE
-        WHEN ((SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END) / c.lecture_hours) >= 80.00) THEN 'Eligibility' 
+        WHEN ((SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END) / c.lecture_hours)*100 >= 80.00) THEN 'Eligibility' 
         ELSE 'NOT Eligibility' END AS Eligibility 
     FROM attendance A
     JOIN course_unit c ON A.course_code = c.course_code
@@ -182,122 +177,164 @@ END;
 //
 DELIMITER ;
 
-For theory and practical for each individuals(with eligibilty)
+--To Get Attendance Percentage and Eligibility When a subject has theory and practical as combined to each other
+
 
 DELIMITER //
-CREATE PROCEDURE GetAttGivingRegNumberandCourseCodeForTheoryAndPracticalEleg(IN regno CHAR(6), ccode CHAR(7))
+ CREATE PROCEDURE Get_Att_Elig_For_Sub_Theo_And_Prac_Each(IN regno CHAR(6), ccode CHAR(7))
+    BEGIN
+         SELECT A.reg_no, c.course_code,
+         ((SUM(CASE
+             WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END) /(c.lecture_hours*2))*100) AS Attendance_percentage,
+         CASE
+             WHEN ((SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END) / (c.lecture_hours*2))*100 >= 80.00) THEN 'Eligibility'
+             ELSE 'NOT Eligibility' END AS Eligibility
+         FROM attendance A
+         JOIN course_unit c ON A.course_code = c.course_code
+         WHERE c.course_code = A.course_code
+         AND A.reg_no = regno
+         AND c.course_code = ccode
+        GROUP BY A.reg_no,c.course_code;
+END;
+//
+DELIMITER ; 
+
+--To get the attendance percentage When a subject has thoery and practical as separate to each other
+
+DELIMITER //
+CREATE PROCEDURE Get_Att_For_Sub_Theo_OR_Prac_Each(IN regno CHAR(6), ccode CHAR(7), t VARCHAR(25))
 BEGIN
-    SELECT A.reg_no, c.course_code,
+    SELECT A.reg_no, c.course_code, A.type,
     ((SUM(CASE 
-        WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END) / (c.lecture_hours*2))*100) AS Attendance_percentage,
+        WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END) / c.lecture_hours)*100) AS Attendance_percentage
+    FROM attendance A
+    JOIN course_unit c ON A.course_code = c.course_code
+    WHERE c.course_code = A.course_code
+    AND A.reg_no = regno
+    AND c.course_code = ccode
+    AND ((t = 'Theory' AND A.type = 'Theory')
+         OR (t = 'Practical' AND A.type = 'Practical'))
+    GROUP BY A.reg_no, c.course_code, A.type;
+END;
+//
+DELIMITER ;
+
+--To get the attendance percentage When a subject has thoery and practical as combined to each other
+
+DELIMITER //
+ CREATE PROCEDURE Get_Att_For_Sub_Theo_And_Prac_Each(IN regno CHAR(6), ccode CHAR(7))
+    BEGIN
+         SELECT A.reg_no, c.course_code,
+         ((SUM(CASE
+             WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END) /(c.lecture_hours*2))*100) AS Attendance_percentage,
+         CASE
+             WHEN ((SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END) / (c.lecture_hours*2))*100 >= 80.00) THEN 'Eligibility'
+             ELSE 'NOT Eligibility' END AS Eligibility
+         FROM attendance A
+         JOIN course_unit c ON A.course_code = c.course_code
+         WHERE c.course_code = A.course_code
+         AND A.reg_no = regno
+         AND c.course_code = ccode
+        GROUP BY A.reg_no,c.course_code;
+END;
+//
+DELIMITER ;
+
+--To get the attendance percentage and eligibity When a subject has thoery and practical as separate to each other(with medicals)
+
+DELIMITER //
+CREATE PROCEDURE Get_Att_Elig_For_Sub_Theo_OR_Prac_Each_Medic(IN regno CHAR(6), ccode CHAR(7), t VARCHAR(25))
+BEGIN
+    SELECT A.reg_no, c.course_code, A.type,
+    ((SUM(CASE 
+        WHEN A.status = "Present" OR A.status = 'Medical Leave' THEN A.lecture_time_per_session ELSE 0 END) / c.lecture_hours)*100) AS Attendance_percentage,
     CASE
-        WHEN ((SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END) / c.lecture_hours)*100) >= 80.00 THEN 'Eligibility' 
+        WHEN ((SUM(CASE WHEN A.status = "Present" OR A.status = 'Medical Leave' THEN A.lecture_time_per_session ELSE 0 END) / c.lecture_hours)*100 >= 80.00) THEN 'Eligibility' 
         ELSE 'NOT Eligibility' END AS Eligibility 
     FROM attendance A
     JOIN course_unit c ON A.course_code = c.course_code
     WHERE c.course_code = A.course_code
     AND A.reg_no = regno
     AND c.course_code = ccode
-    GROUP BY A.reg_no,c.course_code;
-END;
-//
-DELIMITER ;
-
-
-For theory or practical for each individual(without eligibilty)
-
-DELIMITER // 
-CREATE PROCEDURE GetAttGivingRegNumberandCourseCodeForTheoryAndPractical(IN regno CHAR(6), ccode CHAR(7),t VARCHAR(25))
-BEGIN
-     SELECT A.reg_no,c.course_code,A.type,
-    ((SUM(CASE 
-          WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/c.lecture_hours)*100) AS Attendance_percentage
-    FROM attendance A
-    JOIN course_unit c ON A.course_code = c.course_code
-    WHERE c.course_code = A.course_code
-    AND A.reg_no = regno
-    AND C.course_code = ccode 
     AND ((t = 'Theory' AND A.type = 'Theory')
          OR (t = 'Practical' AND A.type = 'Practical'))
-    GROUP BY A.reg_no,c.course_code,A.type;
+    GROUP BY A.reg_no, c.course_code, A.type;
 END;
 //
 DELIMITER ;
 
+--To get the attendance percentage and eligibity When a subject has thoery and practical as combined to each other(with medicals)
 
-For theory and practical for each individual(without eligibilty)
+DELIMITER //
+ CREATE PROCEDURE Get_Att_Elig_For_Sub_Theo_And_Prac_Each_Medic(IN regno CHAR(6), ccode CHAR(7))
+    BEGIN
+         SELECT A.reg_no, c.course_code,
+         ((SUM(CASE
+             WHEN A.status = "Present" OR A.status = 'Medical Leave' THEN  A.lecture_time_per_session ELSE 0 END) /(c.lecture_hours*2))*100) AS Attendance_percentage,
+         CASE
+             WHEN ((SUM(CASE WHEN A.status = "Present" OR A.status = 'Medical Leave' THEN A.lecture_time_per_session ELSE 0 END) / (c.lecture_hours*2))*100 >= 80.00) THEN 'Eligibility'
+             ELSE 'NOT Eligibility' END AS Eligibility
+         FROM attendance A
+         JOIN course_unit c ON A.course_code = c.course_code
+         WHERE c.course_code = A.course_code
+         AND A.reg_no = regno
+         AND c.course_code = ccode
+        GROUP BY A.reg_no,c.course_code;
+END;
+//
+DELIMITER ; 
 
-DELIMITER // 
-CREATE PROCEDURE GetAttGivingRegNumberandCourseCodeForTheoryAndPractical(IN regno CHAR(6), ccode CHAR(7))
+--To get the attendance percentage When a subject has thoery and practical as separate to each other(with medicals)
+
+
+DELIMITER //
+CREATE PROCEDURE Get_Att_For_Sub_Theo_OR_Prac_Each_Medic(IN regno CHAR(6), ccode CHAR(7), t VARCHAR(25))
 BEGIN
-     SELECT A.reg_no,c.course_code,
+    SELECT A.reg_no, c.course_code, A.type,
     ((SUM(CASE 
-          WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/(c.lecture_hours*2))*100) AS Attendance_percentage,
-    CASE
-        WHEN ((SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END) / c.lecture_hours) >= 80.00) THEN 'Eligibility' 
-        ELSE 'NOT Eligibility' END AS Eligibility
+        WHEN A.status = "Present" OR A.status = 'Medical Leave' THEN A.lecture_time_per_session ELSE 0 END) / c.lecture_hours)*100) AS Attendance_percentage
     FROM attendance A
     JOIN course_unit c ON A.course_code = c.course_code
     WHERE c.course_code = A.course_code
     AND A.reg_no = regno
-    AND C.course_code = ccode 
-    GROUP BY A.reg_no,c.course_code;
+    AND c.course_code = ccode
+    AND ((t = 'Theory' AND A.type = 'Theory')
+         OR (t = 'Practical' AND A.type = 'Practical'))
+    GROUP BY A.reg_no, c.course_code, A.type;
 END;
 //
 DELIMITER ;
 
+--To get the attendance percentage When a subject has thoery and practical as combined to each other(with medicals)
 
-
-For both theory and practical parts for each individual(with elegibity)
-
-DELIMITER // 
-CREATE PROCEDURE GetAttGivingRegNumberandCourseCodeForTheoryAndPracticalElig(IN regno CHAR(6), ccode CHAR(7),t VARCHAR(25))
+DELIMITER //
+CREATE PROCEDURE Get_Att_For_Sub_Theo_And_Prac_Each_Medic(IN regno CHAR(6), ccode CHAR(7), t VARCHAR(25))
 BEGIN
-     SELECT A.reg_no,c.course_code,A.type,
+    SELECT A.reg_no, c.course_code,
     ((SUM(CASE 
-        WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/(c.lecture_hours*2))*100) AS Attendance_percentage,
-    CASE 
-       WHEN((SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/(c.lecture_hours)) >= 80.00) THEN 'Eligibity' ELSE 'NOT Eligibity' END AS Eligibity 
+        WHEN A.status = "Present" A.status = 'Medical Leave' THEN A.lecture_time_per_session ELSE 0 END) / c.lecture_hours)*100) AS Attendance_percentage
     FROM attendance A
     JOIN course_unit c ON A.course_code = c.course_code
     WHERE c.course_code = A.course_code
     AND A.reg_no = regno
-    AND C.course_code = ccode 
-    GROUP BY A.reg_no,c.course_code,A.type;
+    AND c.course_code = ccode
+    AND ((t = 'Theory' AND A.type = 'Theory')
+         OR (t = 'Practical' AND A.type = 'Practical'))
+    GROUP BY A.reg_no, c.course_code;
 END;
 //
 DELIMITER ;
 
-
-For both theory and practical parts for each individual(without elegibity)
-
+--To get attendance percentage and eligibility for when a subject has theory and practical for each subject as separate 
 
 DELIMITER // 
-CREATE PROCEDURE GetAttGivingRegNumberandCourseCodeForTheoryAndPractical(IN regno CHAR(6), ccode CHAR(7))
-BEGIN
-     SELECT A.reg_no,c.course_code,A.type,
-    ((SUM(CASE 
-         WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/(c.lecture_hours*2))*100) AS Attendance_percentage
-    FROM attendance A
-    JOIN course_unit c ON A.course_code = c.course_code
-    WHERE c.course_code = A.course_code
-    AND A.reg_no = regno
-    AND C.course_code = ccode 
-    GROUP BY A.reg_no,c.course_code,A.type;
-END;
-//
-DELIMITER ;
-
-For theory or practical to each course unit(with eligibity)
-
-DELIMITER // 
-CREATE PROCEDURE GetAttGivingCourseCodeForTheoryOrPracticalElig(ccode CHAR(7),t VARCHAR(25))
+CREATE PROCEDURE Get_att_Elig_For_Theo_Or_Prac_Sub(ccode CHAR(7),t VARCHAR(25))
 BEGIN
      SELECT A.reg_no,c.course_code,A.type,
     ((SUM(CASE 
         WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/c.lecture_hours)*100) AS Attendance_percentage,
     CASE
-        WHEN ((SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END) / c.lecture_hours) >= 80.00) THEN 'Eligibility'
+        WHEN (SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END) / c.lecture_hours)*100 >= 80 THEN 'Eligibility'
         ELSE 'NOT Eligibility' END AS Eligibility 
     FROM attendance A
     JOIN course_unit c ON A.course_code = c.course_code
@@ -310,16 +347,58 @@ END;
 //
 DELIMITER ;
 
-For theory and practical to each course unit(with eligibity)
+--To get attendance percentage and eligibility for when a subject has theory and practical for each subject as combined
 
 DELIMITER // 
-CREATE PROCEDURE GetAttGivingCourseCodeForTheoryAndPracticalElig(ccode CHAR(7))
+CREATE PROCEDURE Get_att_Elig_For_Theo_And_Prac_Sub(ccode CHAR(7))
 BEGIN
      SELECT A.reg_no,c.course_code,
-    (SUM(CASE 
-        WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/(c.lecture_hours*2)) AS Attendance_percentage,
+    ((SUM(CASE 
+        WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/(c.lecture_hours*2))*100) AS Attendance_percentage,
     CASE
-        WHEN ((SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END) / c.lecture_hours)*100) >= 80.00 THEN 'Eligibility'
+        WHEN (SUM(CASE WHEN A.status = "Present"  THEN A.lecture_time_per_session ELSE 0 END) / (c.lecture_hours*2))*100 >= 80 THEN 'Eligibility'
+        ELSE 'NOT Eligibility' END AS Eligibility 
+    FROM attendance A
+    JOIN course_unit c ON A.course_code = c.course_code
+    WHERE c.course_code = A.course_code
+    AND C.course_code = ccode 
+    GROUP BY A.reg_no,c.course_code;
+END;
+//
+DELIMITER ;
+
+--`To get attendance percentage and eligibity for when a subject has theory and practical for each subject as separate(with medicals)
+
+DELIMITER // 
+CREATE PROCEDURE Get_att_Elig_For_Theo_Or_Prac_Sub_Medic(ccode CHAR(7),t VARCHAR(25))
+BEGIN
+     SELECT A.reg_no,c.course_code,A.type,
+    ((SUM(CASE 
+        WHEN A.status = "Present" OR A.status = 'Medical Leave' THEN A.lecture_time_per_session ELSE 0 END)/c.lecture_hours)*100) AS Attendance_percentage,
+    CASE
+        WHEN (SUM(CASE WHEN A.status = "Present" OR A.status = 'Medical Leave' THEN A.lecture_time_per_session ELSE 0 END) / (c.lecture_hours))*100 >= 80.00 THEN 'Eligibility'
+        ELSE 'NOT Eligibility' END AS Eligibility 
+    FROM attendance A
+    JOIN course_unit c ON A.course_code = c.course_code
+    WHERE c.course_code = A.course_code
+    AND C.course_code = ccode 
+    AND ((t = 'Theory' AND A.type = 'Theory')
+         OR (t = 'Practical' AND A.type = 'Practical'))
+    GROUP BY A.reg_no,c.course_code,A.type;
+END;
+//
+DELIMITER ;
+
+--To get attendance percentage and eligibility for when a subject has theory and practical for each subject as combined(with medicals)
+
+DELIMITER // 
+CREATE PROCEDURE Get_att_Elig_For_Theo_And_Prac_Sub_Medic(ccode CHAR(7))
+BEGIN
+     SELECT A.reg_no,c.course_code,
+    ((SUM(CASE 
+        WHEN A.status = "Present" A.status = 'Medical Leave' THEN A.lecture_time_per_session ELSE 0 END)/(c.lecture_hours*2))*100) AS Attendance_percentage,
+    CASE
+        WHEN (SUM(CASE WHEN A.status = "Present" A.status = 'Medical Leave' THEN A.lecture_time_per_session ELSE 0 END) / (c.lecture_hours*2))*100 >= 80 THEN 'Eligibility'
         ELSE 'NOT Eligibility' END AS Eligibility 
     FROM attendance A
     JOIN course_unit c ON A.course_code = c.course_code
@@ -332,505 +411,9 @@ DELIMITER ;
 
 
 
-For theory and practical to each course unit(without eligibity)
-
-DELIMITER // 
-CREATE PROCEDURE GetAttGivingCourseCodeForTheoryOrPractical(ccode CHAR(7))
-BEGIN
-     SELECT A.reg_no,c.course_code,
-    ((SUM(CASE 
-        WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/(c.lecture_hours*2))*100) AS Attendance_percentage
-    FROM attendance A
-    JOIN course_unit c ON A.course_code = c.course_code
-    WHERE c.course_code = A.course_code
-    AND C.course_code = ccode 
-    GROUP BY A.reg_no,c.course_code;
-END;
-//
-DELIMITER ;
-**************************************************Attendance Data***********************************************************************************
-
-('TG1010', 'ICT1212', 2, '2023-09-01','Present',1,'Theory'),
-('TG1010', 'ICT1212', 2, '2023-09-08', 'Present',2,'Theory'),
-('TG1010', 'ICT1212', 2, '2023-09-15', 'Absent',3,'Theory'),
-('TG1010', 'ICT1212', 2, '2023-09-22', 'Present',4,'Theory'),
-('TG1010', 'ICT1212', 2, '2023-09-29', 'Present',5,'Theory'),
-('TG1010', 'ICT1212', 2, '2023-10-05', 'Present',6,'Theory'),
-('TG1010', 'ICT1212', 2, '2023-10-12', 'Present',7,'Theory'),
-('TG1010', 'ICT1212', 2, '2023-10-19', 'Present',8,'Theory'),
-('TG1010', 'ICT1212', 2, '2023-10-26', 'Present',9,'Theory'),
-('TG1010', 'ICT1212', 2, '2023-11-03', 'Absent',10,'Theory'),              
-('TG1010', 'ICT1212', 2, '2023-11-10', 'Present',11,'Theory'),       
-('TG1010', 'ICT1212', 2, '2023-11-17', 'Present',12,'Theory'),
-('TG1010', 'ICT1212', 2, '2023-11-24', 'Present',13,'Theory'),
-('TG1010', 'ICT1212', 2, '2023-11-30', 'Medical Leave',14,'Theory'),
-('TG1010', 'ICT1212', 2, '2023-12-06', 'Present',15,'Theory'),
-
-('TG1010', 'ICT1222', 4, '2023-09-01','Present',1,'Practical'),
-('TG1010', 'ICT1222', 4, '2023-09-08', 'Present',2,'Practical'),
-('TG1010', 'ICT1222', 4, '2023-09-15', 'Absent',3,'Practical'),
-('TG1010', 'ICT1222', 4, '2023-09-22', 'Present',4,'Practical'),
-('TG1010', 'ICT1222', 4, '2023-09-29', 'Present',5,'Practical'),
-('TG1010', 'ICT1222', 4, '2023-10-05', 'Absent',6,'Practical'),
-('TG1010', 'ICT1222', 4, '2023-10-12', 'Present',7,'Practical'),
-('TG1010', 'ICT1222', 4, '2023-10-19', 'Present',8,'Practical'),
-('TG1010', 'ICT1222', 4, '2023-10-26', 'Present',9,'Practical'),
-('TG1010', 'ICT1222', 4, '2023-11-03', 'Present',10,'Practical'),
-('TG1010', 'ICT1222', 4, '2023-11-10', 'Present',11,'Practical'),
-('TG1010', 'ICT1222', 4, '2023-11-17', 'Present',12,'Practical'),
-('TG1010', 'ICT1222', 4, '2023-11-24', 'Present',13,'Practical'),
-('TG1010', 'ICT1222', 4, '2023-11-30', 'Present',14,'Practical'),
-('TG1010', 'ICT1222', 4, '2023-12-06', 'Medical Leave',15,'Practical'),
-
-('TG1010', 'ICT1253', 2, '2023-09-02','Present',1,'Theory'),
-('TG1010', 'ICT1253', 2, '2023-09-09', 'Present',2,'Theory'),
-('TG1010', 'ICT1253', 2, '2023-09-16', 'Present',3,'Theory'),
-('TG1010', 'ICT1253', 2, '2023-09-23', 'Present',4,'Theory'),
-('TG1010', 'ICT1253', 2, '2023-09-30', 'Present',5,'Theory'),
-('TG1010', 'ICT1253', 2, '2023-10-06', 'Absent',6,'Theory'),
-('TG1010', 'ICT1253', 2, '2023-10-13', 'Present',7,'Theory'),                
-('TG1010', 'ICT1253', 2, '2023-10-20', 'Present',8,'Theory'),                          
-('TG1010', 'ICT1253', 2, '2023-10-27', 'Present',9,'Theory'),
-('TG1010', 'ICT1253', 2, '2023-11-04', 'Present',10,'Theory'),
-('TG1010', 'ICT1253', 2, '2023-11-11', 'Present',11,'Theory'),
-('TG1010', 'ICT1253', 2, '2023-11-18', 'Present',12,'Theory'),
-('TG1010', 'ICT1253', 2, '2023-11-25', 'Present',13,'Theory'),
-('TG1010', 'ICT1253', 2, '2023-11-30', 'Present',14,'Theory'),
-('TG1010', 'ICT1253', 2, '2023-12-07', 'Absent',15,'Theory'),
-
- ('TG1010', 'ICT1253', 2, '2023-09-02','Present',1,'Practical'),
-('TG1010', 'ICT1253', 2, '2023-09-09', 'Present',2,'Practical'),
-('TG1010', 'ICT1253', 2, '2023-09-16', 'Present',3,'Practical'),
-('TG1010', 'ICT1253', 2, '2023-09-23', 'Medical Leave',4,'Practical'),
-('TG1010', 'ICT1253', 2, '2023-09-30', 'Present',5,'Practical'),
-('TG1010', 'ICT1253', 2, '2023-10-06', 'Present',6,'Practical'),
-('TG1010', 'ICT1253', 2, '2023-10-13', 'Present',7,'Practical'),                
-('TG1010', 'ICT1253', 2, '2023-10-20', 'Present',8,'Practical'),                          
-('TG1010', 'ICT1253', 2, '2023-10-27', 'Present',9,'Practical'),
-('TG1010', 'ICT1253', 2, '2023-11-04', 'Absent',10,'Practical'),
-('TG1010', 'ICT1253', 2, '2023-11-11', 'Present',11,'Practical'),
-('TG1010', 'ICT1253', 2, '2023-11-18', 'Present',12,'Practical'),
-('TG1010', 'ICT1253', 2, '2023-11-25', 'Present',13,'Practical'),
-('TG1010', 'ICT1253', 2, '2023-11-30', 'Present',14,'Practical'),
-('TG1010', 'ICT1253', 2, '2023-12-07', 'Absent',15,'Practical'),
-
-('TG1010', 'TMS1253', 2, '2023-09-04','Present',1,'Theory'),
-('TG1010', 'TMS1253', 2, '2023-09-11', 'Present',2,'Theory'),
-('TG1010', 'TMS1253', 2, '2023-09-18', 'Present',3,'Theory'),
-('TG1010', 'TMS1253', 2, '2023-09-25', 'Present',4,'Theory'),
-('TG1010', 'TMS1253', 2, '2023-09-02', 'Present',5,'Theory'),
-('TG1010', 'TMS1253', 2, '2023-10-09', 'Medical Leave',6,'Theory'),
-('TG1010', 'TMS1253', 2, '2023-10-16', 'Present',7,'Theory'),
-('TG1010', 'TMS1253', 2, '2023-10-23', 'Present',8,'Theory'),
-('TG1010', 'TMS1253', 2, '2023-10-30', 'Present',9,'Theory'),
-('TG1010', 'TMS1253', 2, '2023-11-06', 'Present',10,'Theory'),
-('TG1010', 'TMS1253', 2, '2023-11-13', 'Present',11,'Theory'),
-('TG1010', 'TMS1253', 2, '2023-11-20', 'Absent',12,'Theory'),
-('TG1010', 'TMS1253', 2, '2023-11-27', 'Present',13,'Theory'),
-('TG1010', 'TMS1253', 2, '2023-11-03', 'Present',14,'Theory'),
-('TG1010', 'TMS1253', 2, '2023-12-09', 'Present',15,'Theory'),
-    
-('TG1010', 'ICT1242', 2, '2023-09-02','Present',1,'Theory'),
-('TG1010', 'ICT1242', 2, '2023-09-09', 'Absent',2,'Theory'),
-('TG1010', 'ICT1242', 2, '2023-09-16', 'Present',3,'Theory'),
-('TG1010', 'ICT1242', 2, '2023-09-23', 'Present',4,'Theory'),
-('TG1010', 'ICT1242', 2, '2023-09-30', 'Present',5,'Theory'),
-('TG1010', 'ICT1242', 2, '2023-10-06', 'Present',6,'Theory'),
-('TG1010', 'ICT1242', 2, '2023-10-13', 'Present',7,'Theory'),
-('TG1010', 'ICT1242', 2, '2023-10-20', 'Present',8,'Theory'),
-('TG1010', 'ICT1242', 2, '2023-10-27', 'Present',9,'Theory'),
-('TG1010', 'ICT1242', 2, '2023-11-04', 'Absent',10,'Theory'),
-('TG1010', 'ICT1242', 2, '2023-11-11', 'Present',11,'Theory'),
-('TG1010', 'ICT1242', 2, '2023-11-18', 'Present',12,'Theory'),
-('TG1010', 'ICT1242', 2, '2023-11-25', 'Present',13,'Theory'),
-('TG1010', 'ICT1242', 2, '2023-11-30', 'Present',14,'Theory'),
-('TG1010', 'ICT1242', 2, '2023-12-06', 'Absent',15,'Theory'),
 
 
-('TG1010', 'TCS1212', 2, '2023-09-05','Present',1,'Theory'),
-('TG1010', 'TCS1212', 2, '2023-09-12', 'Present',2,'Theory'),
-('TG1010', 'TCS1212', 2, '2023-09-19', 'Present',3,'Theory'),
-('TG1010', 'TCS1212', 2, '2023-09-26', 'Present',4,'Theory'),
-('TG1010', 'TCS1212', 2, '2023-09-03', 'Absent',5,'Theory'),
-('TG1010', 'TCS1212', 2, '2023-10-10', 'Present',6,'Theory'),
-('TG1010', 'TCS1212', 2, '2023-10-16', 'Present',7,'Theory'),
-('TG1010', 'TCS1212', 2, '2023-10-23', 'Present',8,'Theory'),
-('TG1010', 'TCS1212', 2, '2023-10-30', 'Present',9,'Theory'),
-('TG1010', 'TCS1212', 2, '2023-11-06', 'Present',10,'Theory'),
-('TG1010', 'TCS1212', 2, '2023-11-13', 'Present',11,'Theory'),
-('TG1010', 'TCS1212', 2, '2023-11-20', 'Absent',12,'Theory'),
-('TG1010', 'TCS1212', 2, '2023-11-27', 'Present',13,'Theory'),
-('TG1010', 'TCS1212', 2, '2023-12-03', 'Present',14,'Theory'),
-('TG1010', 'TCS1212', 2, '2023-12-10', 'Medical Leave',15,'Theory'),
 
-('TG1010', 'ICT1233', 2, '2023-09-04','Present',1,'Theory'),
-('TG1010', 'ICT1233', 2, '2023-09-11', 'Present',2,'Theory'),
-('TG1010', 'ICT1233', 2, '2023-09-18', 'Present',3,'Theory'),
-('TG1010', 'ICT1233', 2, '2023-09-26', 'Present',4,'Theory'),
-('TG1010', 'ICT1233', 2, '2023-09-05', 'Present',5,'Theory'),
-('TG1010', 'ICT1233', 2, '2023-10-12', 'Present',6,'Theory'),
-('TG1010', 'ICT1233', 2, '2023-10-19', 'Present',7,'Theory'),
-('TG1010', 'ICT1233', 2, '2023-10-26', 'Present',8,'Theory'),
-('TG1010', 'ICT1233', 2, '2023-10-03', 'Present',9,'Theory'),
-('TG1010', 'ICT1233', 2, '2023-11-10', 'Present',10,'Theory'),
-('TG1010', 'ICT1233', 2, '2023-11-17', 'Present',11,'Theory'),
-('TG1010', 'ICT1233', 2, '2023-11-23', 'Medical Leave',12,'Theory'),
-('TG1010', 'ICT1233', 2, '2023-11-30', 'Present',13,'Theory'),
-('TG1010', 'ICT1233', 2, '2023-11-06', 'Absent',14,'Theory'),
-('TG1010', 'ICT1233', 2, '2023-12-15', 'Present',15,'Theory'),
-
-('TG1010', 'ICT1233', 2, '2023-09-04','Present',1,'Practical'),
-('TG1010', 'ICT1233', 2, '2023-09-11', 'Present',2,'Practical'),
-('TG1010', 'ICT1233', 2, '2023-09-18', 'Present',3,'Practical'),
-('TG1010', 'ICT1233', 2, '2023-09-26', 'Present',4,'Practical'),
-('TG1010', 'ICT1233', 2, '2023-09-05', 'Present',5,'Practical'),
-('TG1010', 'ICT1233', 2, '2023-10-12', 'Present',6,'Practical'),
-('TG1010', 'ICT1233', 2, '2023-10-19', 'Absent',7,'Practical'),
-('TG1010', 'ICT1233', 2, '2023-10-26', 'Present',8,'Practical'),
-('TG1010', 'ICT1233', 2, '2023-10-03', 'Present',9,'Practical'),
-('TG1010', 'ICT1233', 2, '2023-11-10', 'Present',10,'Practical'),
-('TG1010', 'ICT1233', 2, '2023-11-17', 'Present',11,'Practical'),
-('TG1010', 'ICT1233', 2, '2023-11-23', 'Present',12,'Practical'),
-('TG1010', 'ICT1233', 2, '2023-11-30', 'Present',13,'Practical'),
-('TG1010', 'ICT1233', 2, '2023-11-06', 'Present',14,'Practical'),
-('TG1010', 'ICT1233', 2, '2023-12-15', 'Absent',15,'Practical'),
-
-('TG1010', 'ENG1222', 2, '2023-09-05','Present',1,'Theory'),
-('TG1010', 'ENG1222', 2, '2023-09-12', 'Present',2,'Theory'),
-('TG1010', 'ENG1222', 2, '2023-09-19', 'Absent',3,'Theory'),
-('TG1010', 'ENG1222', 2, '2023-09-26', 'Present',4,'Theory'),
-('TG1010', 'ENG1222', 2, '2023-09-03', 'Present',5,'Theory'),
-('TG1010', 'ENG1222', 2, '2023-10-09', 'Present',6,'Theory'),
-('TG1010', 'ENG1222', 2, '2023-10-16', 'Present',7,'Theory'),
-('TG1010', 'ENG1222', 2, '2023-10-23', 'Present',8,'Theory'),
-('TG1010', 'ENG1222', 2, '2023-10-30', 'Present',9,'Theory'),
-('TG1010', 'ENG1222', 2, '2023-11-06', 'Present',10,'Theory'),
-('TG1010', 'ENG1222', 2, '2023-11-13', 'Present',11,'Theory'),
-('TG1010', 'ENG1222', 2, '2023-11-20', 'Present',12,'Theory'),
-('TG1010', 'ENG1222', 2, '2023-11-30', 'Absent',13,'Theory'),
-('TG1010', 'ENG1222', 2, '2023-12-06', 'Present',14,'Theory'),
-('TG1010', 'ENG1222', 2, '2023-12-13', 'Present',15,'Theory'),
-
-('TG1011','ICT1212',2,'2023-09-01','Present',1,'Theory'),
-('TG1011','ICT1212',2,'2023-09-08','Present',2,'Theory'),
-('TG1011','ICT1212',2,'2023-09-15','Present',3,'Theory'),
-('TG1011','ICT1212',2,'2023-09-22','Medical Leave',4,'Theory'),
-('TG1011','ICT1212',2,'2023-09-29','Present',5,'Theory'),
-('TG1011','ICT1212',2,'2023-10-05','Present',6,'Theory'),
-('TG1011','ICT1212',2,'2023-10-12','Present',7,'Theory'),
-('TG1011','ICT1212',2,'2023-10-19','Present',8,'Theory'),
-('TG1011','ICT1212',2,'2023-10-26','Present',9,'Theory'),
-('TG1011','ICT1212',2,'2023-11-03','Present',10,'Theory'),
-('TG1011','ICT1212',2,'2023-11-10','Absent',11,'Theory'),
-('TG1011','ICT1212',2,'2023-11-17','Present',12,'Theory'),
-('TG1011','ICT1212',2,'2023-11-24','Absent',13,'Theory'),
-('TG1011','ICT1212',2,'2023-11-30','Present',14,'Theory'),
-('TG1011','ICT1212',2,'2023-12-06','Absent',15,'Theory'),
-
-('TG1011','ICT1222',4,'2023-09-01','Present',1,'Practical'),
-('TG1011','ICT1222',4,'2023-09-08','Present',4,'Practical'),
-('TG1011','ICT1222',4,'2023-09-15','Present',3,'Practical'),
-('TG1011','ICT1222',4,'2023-09-22','Present',4,'Practical'),
-('TG1011','ICT1222',4,'2023-09-29','Medical Leave',5,'Practical'),
-('TG1011','ICT1222',4,'2023-10-05','Present',6,'Practical'),
-('TG1011','ICT1222',4,'2023-10-12','Present',7,'Practical'),
-('TG1011','ICT1222',4,'2023-10-19','Present',8,'Practical'),
-('TG1011','ICT1222',4,'2023-10-26','Present',9,'Practical'),
-('TG1011','ICT1222',4,'2023-11-03','Absent',10,'Practical'),
-('TG1011','ICT1222',4,'2023-11-10','Present',11,'Practical'),
-('TG1011','ICT1222',4,'2023-11-17','Present',12,'Practical'),
-('TG1011','ICT1222',4,'2023-11-24','Absent',13,'Practical'),
-('TG1011','ICT1222',4,'2023-11-30','Present',14,'Practical'),
-('TG1011','ICT1222',4,'2023-12-06','Absent',15,'Practical'),
-
-('TG1011','ICT1253',2,'2023-09-02','Present',1,'Theory'),
-('TG1011','ICT1253',2,'2023-09-09','Present',2,'Theory'),
-('TG1011','ICT1253',2,'2023-09-16','Absent',3,'Theory'),
-('TG1011','ICT1253',2,'2023-09-23','Present',4,'Theory'),
-('TG1011','ICT1253',2,'2023-09-30','Present',5,'Theory'),
-('TG1011','ICT1253',2,'2023-10-06','Present',6,'Theory'),
-('TG1011','ICT1253',2,'2023-10-13','Present',7,'Theory'),
-('TG1011','ICT1253',2,'2023-10-20','Absent',8,'Theory'),
-('TG1011','ICT1253',2,'2023-10-27','Present',9,'Theory'),
-('TG1011','ICT1253',2,'2023-11-04','Present',10,'Theory'),
-('TG1011','ICT1253',2,'2023-11-11','Absent',11,'Theory'),
-('TG1011','ICT1253',2,'2023-11-18','Present',12,'Theory'),
-('TG1011','ICT1253',2,'2023-11-25','Present',13,'Theory'),
-('TG1011','ICT1253',2,'2023-11-30','Present',14,'Theory'),
-('TG1011','ICT1253',2,'2023-12-07','Present',15,'Theory'),
-
-('TG1011','ICT1253',2,'2023-09-02','Present',1,'Practical'),
-('TG1011','ICT1253',2,'2023-09-09','Present',2,'Practical'),
-('TG1011','ICT1253',2,'2023-09-16','Present',3,'Practical'),
-('TG1011','ICT1253',2,'2023-09-23','Present',4,'Practical'),
-('TG1011','ICT1253',2,'2023-09-30','Present',5,'Practical'),
-('TG1011','ICT1253',2,'2023-10-06','Present',6,'Practical'),
-('TG1011','ICT1253',2,'2023-10-13','Present',7,'Practical'),
-('TG1011','ICT1253',2,'2023-10-20','Present',8,'Practical'),
-('TG1011','ICT1253',2,'2023-10-27','Present',9,'Practical'),
-('TG1011','ICT1253',2,'2023-11-04','Absent',10,'Practical'),
-('TG1011','ICT1253',2,'2023-11-11','Present',11,'Practical'),
-('TG1011','ICT1253',2,'2023-11-18','Present',12,'Practical'),
-('TG1011','ICT1253',2,'2023-11-25','Present',13,'Practical'),
-('TG1011','ICT1253',2,'2023-11-30','Present',14,'Practical'),
-('TG1011','ICT1253',2,'2023-12-07','Present',15,'Practical'),
-
-('TG1011','TMS1253',2,'2023-09-04','Present',1,'Theory'),
-('TG1011','TMS1253',2,'2023-09-11','Present',2,'Theory'),
-('TG1011','TMS1253',2,'2023-09-18','Present',3,'Theory'),
-('TG1011','TMS1253',2,'2023-09-25','Present',4,'Theory'),
-('TG1011','TMS1253',2,'2023-09-02','Present',5,'Theory'),
-('TG1011','TMS1253',2,'2023-10-09','Present',6,'Theory'),
-('TG1011','TMS1253',2,'2023-10-16','Present',7,'Theory'),
-('TG1011','TMS1253',2,'2023-10-23','Present',8,'Theory'),
-('TG1011','TMS1253',2,'2023-10-30','Present',9,'Theory'),
-('TG1011','TMS1253',2,'2023-11-06','Present',10,'Theory'),
-('TG1011','TMS1253',2,'2023-11-13','Present',11,'Theory'),
-('TG1011','TMS1253',2,'2023-11-20','Present',12,'Theory'),
-('TG1011','TMS1253',2,'2023-11-27','Absent',13,'Theory'),
-('TG1011','TMS1253',2,'2023-11-03','Present',14,'Theory'),
-('TG1011','TMS1253',2,'2023-12-09','Absent',15,'Theory'),
-
-('TG1011','ICT1242',2,'2023-09-02','Present',1,'Theory'),
-('TG1011','ICT1242',2,'2023-09-09','Present',2,'Theory'),
-('TG1011','ICT1242',2,'2023-09-16','Present',3,'Theory'),
-('TG1011','ICT1242',2,'2023-09-23','Present',4,'Theory'),
-('TG1011','ICT1242',2,'2023-09-30','Absent',5,'Theory'),
-('TG1011','ICT1242',2,'2023-10-06','Present',6,'Theory'),
-('TG1011','ICT1242',2,'2023-10-13','Present',7,'Theory'),
-('TG1011','ICT1242',2,'2023-10-20','Present',8,'Theory'),
-('TG1011','ICT1242',2,'2023-10-27','Present',9,'Theory'),
-('TG1011','ICT1242',2,'2023-11-04','Absent',10,'Theory'),
-('TG1011','ICT1242',2,'2023-11-11','Present',11,'Theory'),
-('TG1011','ICT1242',2,'2023-11-18','Present',12,'Theory'),
-('TG1011','ICT1242',2,'2023-11-25','Present',13,'Theory'),
-('TG1011','ICT1242',2,'2023-11-30','Present',14,'Theory'),
-('TG1011','ICT1242',2,'2023-12-06','Absent',15,'Theory'),
-
-('TG1011','TCS1212',2,'2023-09-05','Present',1,'Theory'),
-('TG1011','TCS1212',2,'2023-09-12','Present',2,'Theory'),
-('TG1011','TCS1212',2,'2023-09-19','Present',3,'Theory'),
-('TG1011','TCS1212',2,'2023-09-26','Present',4,'Theory'),
-('TG1011','TCS1212',2,'2023-09-03','Present',5,'Theory'),
-('TG1011','TCS1212',2,'2023-10-10','Present',6,'Theory'),
-('TG1011','TCS1212',2,'2023-10-16','Present',7,'Theory'),
-('TG1011','TCS1212',2,'2023-10-23','Present',8,'Theory'),
-('TG1011','TCS1212',2,'2023-10-30','Present',9,'Theory'),
-('TG1011','TCS1212',2,'2023-11-06','Present',10,'Theory'),
-('TG1011','TCS1212',2,'2023-11-13','Present',11,'Theory'),
-('TG1011','TCS1212',2,'2023-11-20','Present',12,'Theory'),
-('TG1011','TCS1212',2,'2023-11-27','Present',13,'Theory'),
-('TG1011','TCS1212',2,'2023-12-03','Present',14,'Theory'),
-('TG1011','TCS1212',2,'2023-12-10','Present',15,'Theory'),
-
-('TG1011','ICT1233',2,'2023-09-04','Present',1,'Theory'),
-('TG1011','ICT1233',2,'2023-09-11','Absent',2,'Theory'),
-('TG1011','ICT1233',2,'2023-09-18','Present',3,'Theory'),
-('TG1011','ICT1233',2,'2023-09-26','Present',4,'Theory'),
-('TG1011','ICT1233',2,'2023-09-05','Present',5,'Theory'),
-('TG1011','ICT1233',2,'2023-10-12','Present',6,'Theory'),
-('TG1011','ICT1233',2,'2023-10-19','Present',7,'Theory'),
-('TG1011','ICT1233',2,'2023-10-26','Present',8,'Theory'),
-('TG1011','ICT1233',2,'2023-10-03','Present',9,'Theory'),
-('TG1011','ICT1233',2,'2023-11-10','Present',10,'Theory'),
-('TG1011','ICT1233',2,'2023-11-17','Present',11,'Theory'),
-('TG1011','ICT1233',2,'2023-11-23','Medical Leave',12,'Theory'),
-('TG1011','ICT1233',2,'2023-11-30','Present',13,'Theory'),
-('TG1011','ICT1233',2,'2023-11-06','Present',14,'Theory'),
-('TG1011','ICT1233',2,'2023-12-15','Present',15,'Theory'),
-
-('TG1011','ICT1233',2,'2023-09-04','Present',1,'Practical'),
-('TG1011','ICT1233',2,'2023-09-11','Present',2,'Practical'),
-('TG1011','ICT1233',2,'2023-09-18','Present',3,'Practical'),
-('TG1011','ICT1233',2,'2023-09-26','Present',4,'Practical'),
-('TG1011','ICT1233',2,'2023-09-05','Present',5,'Practical'),
-('TG1011','ICT1233',2,'2023-10-12','Absent',6,'Practical'),
-('TG1011','ICT1233',2,'2023-10-19','Present',7,'Practical'),
-('TG1011','ICT1233',2,'2023-10-26','Present',8,'Practical'),
-('TG1011','ICT1233',2,'2023-10-03','Absent',9,'Practical'),
-('TG1011','ICT1233',2,'2023-11-10','Present',10,'Practical'),
-('TG1011','ICT1233',2,'2023-11-17','Present',11,'Practical'),
-('TG1011','ICT1233',2,'2023-11-23','Present',12,'Practical'),
-('TG1011','ICT1233',2,'2023-11-30','Present',13,'Practical'),
-('TG1011','ICT1233',2,'2023-11-06','Present',14,'Practical'),
-('TG1011','ICT1233',2,'2023-12-15','Absent',15,'Practical'),
-
-('TG1011','ENG1222',2,'2023-09-05','Present',1,'Theory'),
-('TG1011','ENG1222',2,'2023-09-12','Present',2,'Theory'),
-('TG1011','ENG1222',2,'2023-09-19','Absent',3,'Theory'),
-('TG1011','ENG1222',2,'2023-09-26','Present',4,'Theory'),
-('TG1011','ENG1222',2,'2023-09-03','Present',5,'Theory'),
-('TG1011','ENG1222',2,'2023-10-09','Present',6,'Theory'),
-('TG1011','ENG1222',2,'2023-10-16','Present',7,'Theory'),
-('TG1011','ENG1222',2,'2023-10-23','Present',8,'Theory'),
-('TG1011','ENG1222',2,'2023-10-30','Present',9,'Theory'),
-('TG1011','ENG1222',2,'2023-11-06','Present',10,'Theory'),
-('TG1011','ENG1222',2,'2023-11-13','Present',11,'Theory'),
-('TG1011','ENG1222',2,'2023-11-20','Present',12,'Theory'),
-('TG1011','ENG1222',2,'2023-11-30','Present',13,'Theory'),
-('TG1011','ENG1222',2,'2023-12-06','Present',14,'Theory'),
-('TG1011','ENG1222',2,'2023-12-13','Present',15,'Theory'),
-
-('TG1012', 'ICT1212', 2, '2023-09-01','Present',1,'Theory'),
-('TG1012', 'ICT1212', 2, '2023-09-08', 'Present',2,'Theory'),
-('TG1012', 'ICT1212', 2, '2023-09-15', 'Present',3,'Theory'),
-('TG1012', 'ICT1212', 2, '2023-09-22', 'Present',4,'Theory'),
-('TG1012', 'ICT1212', 2, '2023-09-29', 'Present',5,'Theory'),
-('TG1012', 'ICT1212', 2, '2023-10-05', 'Present',6,'Theory'),
-('TG1012', 'ICT1212', 2, '2023-10-12', 'Present',7,'Theory'),
-('TG1012', 'ICT1212', 2, '2023-10-19', 'Present',8,'Theory'),
-('TG1012', 'ICT1212', 2, '2023-10-26', 'Present',9,'Theory'),
-('TG1012', 'ICT1212', 2, '2023-11-03', 'Present',10,'Theory'),              
-('TG1012', 'ICT1212', 2, '2023-11-10', 'Present',11,'Theory'),       
-('TG1012', 'ICT1212', 2, '2023-11-17', 'Present',12,'Theory'),
-('TG1012', 'ICT1212', 2, '2023-11-24', 'Present',13,'Theory'),
-('TG1012', 'ICT1212', 2, '2023-11-30', 'Medical Leave',14,'Theory'),
-('TG1012', 'ICT1212', 2, '2023-12-06', 'Present',15,'Theory'),
-
-('TG1012', 'ICT1222', 4, '2023-09-01','Present',1,'Practical'),
-('TG1012', 'ICT1222', 4, '2023-09-08', 'Present',2,'Practical'),
-('TG1012', 'ICT1222', 4, '2023-09-15', 'Present',3,'Practical'),
-('TG1012', 'ICT1222', 4, '2023-09-22', 'Present',4,'Practical'),
-('TG1012', 'ICT1222', 4, '2023-09-29', 'Present',5,'Practical'),
-('TG1012', 'ICT1222', 4, '2023-10-05', 'Absent',6,'Practical'),
-('TG1012', 'ICT1222', 4, '2023-10-12', 'Present',7,'Practical'),
-('TG1012', 'ICT1222', 4, '2023-10-19', 'Present',8,'Practical'),
-('TG1012', 'ICT1222', 4, '2023-10-26', 'Present',9,'Practical'),
-('TG1012', 'ICT1222', 4, '2023-11-03', 'Present',10,'Practical'),
-('TG1012', 'ICT1222', 4, '2023-11-10', 'Absent',11,'Practical'),
-('TG1012', 'ICT1222', 4, '2023-11-17', 'Present',12,'Practical'),
-('TG1012', 'ICT1222', 4, '2023-11-24', 'Absent',13,'Practical'),
-('TG1012', 'ICT1222', 4, '2023-11-30', 'Absent',14,'Practical'),
-('TG1012', 'ICT1222', 4, '2023-12-06', 'Medical Leave',15,'Practical'),
-
-('TG1012', 'ICT1253', 2, '2023-09-02','Present',1,'Theory'),
-('TG1012', 'ICT1253', 2, '2023-09-09', 'Present',2,'Theory'),
-('TG1012', 'ICT1253', 2, '2023-09-16', 'Present',3,'Theory'),
-('TG1012', 'ICT1253', 2, '2023-09-23', 'Present',4,'Theory'),
-('TG1012', 'ICT1253', 2, '2023-09-30', 'Present',5,'Theory'),
-('TG1012', 'ICT1253', 2, '2023-10-06', 'Present',6,'Theory'),
-('TG1012', 'ICT1253', 2, '2023-10-13', 'Present',7,'Theory'),                
-('TG1012', 'ICT1253', 2, '2023-10-20', 'Present',8,'Theory'),                          
-('TG1012', 'ICT1253', 2, '2023-10-27', 'Present',9,'Theory'),
-('TG1012', 'ICT1253', 2, '2023-11-04', 'Present',10,'Theory'),
-('TG1012', 'ICT1253', 2, '2023-11-11', 'Present',11,'Theory'),
-('TG1012', 'ICT1253', 2, '2023-11-18', 'Present',12,'Theory'),
-('TG1012', 'ICT1253', 2, '2023-11-25', 'Present',13,'Theory'),
-('TG1012', 'ICT1253', 2, '2023-11-30', 'Present',14,'Theory'),
-('TG1012', 'ICT1253', 2, '2023-12-07', 'Present',15,'Theory'),
-
-('TG1012', 'ICT1253', 2, '2023-09-02','Present',1,'Practical'),
-('TG1012', 'ICT1253', 2, '2023-09-09', 'Present',2,'Practical'),
-('TG1012', 'ICT1253', 2, '2023-09-16', 'Present',3,'Practical'),
-('TG1012', 'ICT1253', 2, '2023-09-23', 'Medical Leave',4,'Practical'),
-('TG1012', 'ICT1253', 2, '2023-09-30', 'Present',5,'Practical'),
-('TG1012', 'ICT1253', 2, '2023-10-06', 'Present',6,'Practical'),
-('TG1012', 'ICT1253', 2, '2023-10-13', 'Present',7,'Practical'),                
-('TG1012', 'ICT1253', 2, '2023-10-20', 'Present',8,'Practical'),                          
-('TG1012', 'ICT1253', 2, '2023-10-27', 'Present',9,'Practical'),
-('TG1012', 'ICT1253', 2, '2023-11-04', 'Present',10,'Practical'),
-('TG1012', 'ICT1253', 2, '2023-11-11', 'Present',11,'Practical'),
-('TG1012', 'ICT1253', 2, '2023-11-18', 'Present',12,'Practical'),
-('TG1012', 'ICT1253', 2, '2023-11-25', 'Present',13,'Practical'),
-('TG1012', 'ICT1253', 2, '2023-11-30', 'Present',14,'Practical'),
-('TG1012', 'ICT1253', 2, '2023-12-07', 'Present',15,'Practical'),
-
-('TG1012', 'TMS1253', 2, '2023-09-04','Present',1,'Theory'),
-('TG1012', 'TMS1253', 2, '2023-09-11', 'Present',2,'Theory'),
-('TG1012', 'TMS1253', 2, '2023-09-18', 'Present',3,'Theory'),
-('TG1012', 'TMS1253', 2, '2023-09-25', 'Present',4,'Theory'),
-('TG1012', 'TMS1253', 2, '2023-09-02', 'Present',5,'Theory'),
-('TG1012', 'TMS1253', 2, '2023-10-09', 'Medical Leave',6,'Theory'),
-('TG1012', 'TMS1253', 2, '2023-10-16', 'Present',7,'Theory'),
-('TG1012', 'TMS1253', 2, '2023-10-23', 'Present',8,'Theory'),
-('TG1012', 'TMS1253', 2, '2023-10-30', 'Present',9,'Theory'),
-('TG1012', 'TMS1253', 2, '2023-11-06', 'Present',10,'Theory'),
-('TG1012', 'TMS1253', 2, '2023-11-13', 'Absent',11,'Theory'),
-('TG1012', 'TMS1253', 2, '2023-11-20', 'Absent',12,'Theory'),
-('TG1012', 'TMS1253', 2, '2023-11-27', 'Absent',13,'Theory'),
-('TG1012', 'TMS1253', 2, '2023-11-03', 'Present',14,'Theory'),
-('TG1012', 'TMS1253', 2, '2023-12-09', 'Present',15,'Theory'),
-    
-('TG1012', 'ICT1242', 2, '2023-09-02','Present',1,'Theory'),
-('TG1012', 'ICT1242', 2, '2023-09-09', 'Present',2,'Theory'),
-('TG1012', 'ICT1242', 2, '2023-09-16', 'Present',3,'Theory'),
-('TG1012', 'ICT1242', 2, '2023-09-23', 'Present',4,'Theory'),
-('TG1012', 'ICT1242', 2, '2023-09-30', 'Present',5,'Theory'),
-('TG1012', 'ICT1242', 2, '2023-10-06', 'Present',6,'Theory'),
-('TG1012', 'ICT1242', 2, '2023-10-13', 'Present',7,'Theory'),
-('TG1012', 'ICT1242', 2, '2023-10-20', 'Present',8,'Theory'),
-('TG1012', 'ICT1242', 2, '2023-10-27', 'Present',9,'Theory'),
-('TG1012', 'ICT1242', 2, '2023-11-04', 'Absent',10,'Theory'),
-('TG1012', 'ICT1242', 2, '2023-11-11', 'Present',11,'Theory'),
-('TG1012', 'ICT1242', 2, '2023-11-18', 'Present',12,'Theory'),
-('TG1012', 'ICT1242', 2, '2023-11-25', 'Present',13,'Theory'),
-('TG1012', 'ICT1242', 2, '2023-11-30', 'Present',14,'Theory'),
-('TG1012', 'ICT1242', 2, '2023-12-06', 'Medical Leave',15,'Theory'),
-
-
-('TG1012', 'TCS1212', 2, '2023-09-05','Present',1,'Theory'),
-('TG1012', 'TCS1212', 2, '2023-09-12', 'Present',2,'Theory'),
-('TG1012', 'TCS1212', 2, '2023-09-19', 'Present',3,'Theory'),
-('TG1012', 'TCS1212', 2, '2023-09-26', 'Present',4,'Theory'),
-('TG1012', 'TCS1212', 2, '2023-09-03', 'Absent',5,'Theory'),
-('TG1012', 'TCS1212', 2, '2023-10-10', 'Absent',6,'Theory'),
-('TG1012', 'TCS1212', 2, '2023-10-16', 'Absent',7,'Theory'),
-('TG1012', 'TCS1212', 2, '2023-10-23', 'Absent',8,'Theory'),
-('TG1012', 'TCS1212', 2, '2023-10-30', 'Present',9,'Theory'),
-('TG1012', 'TCS1212', 2, '2023-11-06', 'Present',10,'Theory'),
-('TG1012', 'TCS1212', 2, '2023-11-13', 'Present',11,'Theory'),
-('TG1012', 'TCS1212', 2, '2023-11-20', 'Present',12,'Theory'),
-('TG1012', 'TCS1212', 2, '2023-11-27', 'Present',13,'Theory'),
-('TG1012', 'TCS1212', 2, '2023-12-03', 'Present',14,'Theory'),
-('TG1012', 'TCS1212', 2, '2023-12-10', 'Medical Leave',15,'Theory'),
-
-('TG1012', 'ICT1233', 2, '2023-09-04','Present',1,'Theory'),
-('TG1012', 'ICT1233', 2, '2023-09-11', 'Present',2,'Theory'),
-('TG1012', 'ICT1233', 2, '2023-09-18', 'Present',3,'Theory'),
-('TG1012', 'ICT1233', 2, '2023-09-26', 'Present',4,'Theory'),
-('TG1012', 'ICT1233', 2, '2023-09-05', 'Absent',5,'Theory'),
-('TG1012', 'ICT1233', 2, '2023-10-12', 'Present',6,'Theory'),
-('TG1012', 'ICT1233', 2, '2023-10-19', 'Absent',7,'Theory'),
-('TG1012', 'ICT1233', 2, '2023-10-26', 'Present',8,'Theory'),
-('TG1012', 'ICT1233', 2, '2023-10-03', 'Present',9,'Theory'),
-('TG1012', 'ICT1233', 2, '2023-11-10', 'Absent',10,'Theory'),
-('TG1012', 'ICT1233', 2, '2023-11-17', 'Present',11,'Theory'),
-('TG1012', 'ICT1233', 2, '2023-11-23', 'Medical Leave',12,'Theory'),
-('TG1012', 'ICT1233', 2, '2023-11-30', 'Present',13,'Theory'),
-('TG1012', 'ICT1233', 2, '2023-11-06', 'Present',14,'Theory'),
-('TG1012', 'ICT1233', 2, '2023-12-15', 'Absent',15,'Theory'),
-
-('TG1012', 'ICT1233', 2, '2023-09-04','Present',1,'Practical'),
-('TG1012', 'ICT1233', 2, '2023-09-11', 'Present',2,'Practical'),
-('TG1012', 'ICT1233', 2, '2023-09-18', 'Present',3,'Practical'),
-('TG1012', 'ICT1233', 2, '2023-09-26', 'Present',4,'Practical'),
-('TG1012', 'ICT1233', 2, '2023-09-05', 'Present',5,'Practical'),
-('TG1012', 'ICT1233', 2, '2023-10-12', 'Present',6,'Practical'),
-('TG1012', 'ICT1233', 2, '2023-10-19', 'Present',7,'Practical'),
-('TG1012', 'ICT1233', 2, '2023-10-26', 'Present',8,'Practical'),
-('TG1012', 'ICT1233', 2, '2023-10-03', 'Present',9,'Practical'),
-('TG1012', 'ICT1233', 2, '2023-11-10', 'Medical Leave',10,'Practical'),
-('TG1012', 'ICT1233', 2, '2023-11-17', 'Present',11,'Practical'),
-('TG1012', 'ICT1233', 2, '2023-11-23', 'Present',12,'Practical'),
-('TG1012', 'ICT1233', 2, '2023-11-30', 'Present',13,'Practical'),
-('TG1012', 'ICT1233', 2, '2023-11-06', 'Present',14,'Practical'),
-('TG1012', 'ICT1233', 2, '2023-12-15', 'Absent',15,'Practical'),
-
-('TG1012', 'ENG1222', 2, '2023-09-05','Present',1,'Theory'),
-('TG1012', 'ENG1222', 2, '2023-09-12', 'Present',2,'Theory'),
-('TG1012', 'ENG1222', 2, '2023-09-19', 'Absent',3,'Theory'),
-('TG1012', 'ENG1222', 2, '2023-09-26', 'Present',4,'Theory'),
-('TG1012', 'ENG1222', 2, '2023-09-03', 'Present',5,'Theory'),
-('TG1012', 'ENG1222', 2, '2023-10-09', 'Present',6,'Theory'),
-('TG1012', 'ENG1222', 2, '2023-10-16', 'Present',7,'Theory'),
-('TG1012', 'ENG1222', 2, '2023-10-23', 'Present',8,'Theory'),
-('TG1012', 'ENG1222', 2, '2023-10-30', 'Present',9,'Theory'),
-('TG1012', 'ENG1222', 2, '2023-11-06', 'Present',10,'Theory'),
-('TG1012', 'ENG1222', 2, '2023-11-13', 'Present',11,'Theory'),
-('TG1012', 'ENG1222', 2, '2023-11-20', 'Present',12,'Theory'),
-('TG1012', 'ENG1222', 2, '2023-11-30', 'Absent',13,'Theory'),
-('TG1012', 'ENG1222', 2, '2023-12-06', 'Absent',14,'Theory'),
-('TG1012', 'ENG1222', 2, '2023-12-13', 'Absent',15,'Theory');
 
 
 
