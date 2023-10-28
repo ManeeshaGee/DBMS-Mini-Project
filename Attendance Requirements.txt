@@ -396,9 +396,9 @@ CREATE PROCEDURE Get_att_Elig_For_Theo_And_Prac_Sub_Medic(ccode CHAR(7))
 BEGIN
      SELECT A.reg_no,c.course_code,
     ((SUM(CASE 
-        WHEN A.status = "Present" A.status = 'Medical Leave' THEN A.lecture_time_per_session ELSE 0 END)/(c.lecture_hours*2))*100) AS Attendance_percentage,
+        WHEN A.status = "Present" OR A.status = 'Medical Leave' THEN A.lecture_time_per_session ELSE 0 END)/(c.lecture_hours*2))*100) AS Attendance_percentage,
     CASE
-        WHEN (SUM(CASE WHEN A.status = "Present" A.status = 'Medical Leave' THEN A.lecture_time_per_session ELSE 0 END) / (c.lecture_hours*2))*100 >= 80 THEN 'Eligibility'
+        WHEN (SUM(CASE WHEN A.status = "Present" OR A.status = 'Medical Leave' THEN A.lecture_time_per_session ELSE 0 END) / (c.lecture_hours*2))*100 >= 80 THEN 'Eligibility'
         ELSE 'NOT Eligibility' END AS Eligibility 
     FROM attendance A
     JOIN course_unit c ON A.course_code = c.course_code
