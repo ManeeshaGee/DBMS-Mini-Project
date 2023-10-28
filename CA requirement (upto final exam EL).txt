@@ -1,0 +1,226 @@
+Quiz marks TABLE structure
+
+CREATE TABLE quiz_marks (
+    quiz_id INT PRIMARY KEY,
+    reg_no CHAR(6),
+    course_code CHAR(7),
+    quiz_number INT,   
+    quiz_score DECIMAL(3,2),
+    FOREIGN KEY (course_code) REFERENCES course_unit(course_code)
+);
+
+
+ 
+
+CREATE VIEW tot_quiz_marks AS
+SELECT
+    reg_no,
+    course_code,
+    CAST(
+        CASE
+            WHEN COUNT(*) = 3 THEN (SUM(quiz_score) - MIN(quiz_score)) / 2
+            WHEN COUNT(*) = 4 THEN (SUM(quiz_score) - MIN(quiz_score)) / 2
+            ELSE SUM(quiz_score) / 2
+        END AS DECIMAL(3, 2)
+    ) AS total_quiz_marks
+FROM quiz_marks
+GROUP BY reg_no, course_code;
+
+Insert data for QUIZ marks TABLE
+
+INSERT INTO quiz_marks (quiz_id, reg_no, course_code, quiz_number, quiz_score)
+VALUES
+(1, 'TG1010', 'ENG1222', 1, 9.5),
+(2, 'TG1010', 'ENG1222', 2, 9.0),
+(3, 'TG1010', 'ICT1212', 1, 8.0),
+(4, 'TG1010', 'ICT1212', 2, 8.5),
+(5, 'TG1010', 'ICT1212', 3, 9.0),
+(6, 'TG1010', 'ICT1233', 1, 9.5),
+(7, 'TG1010', 'ICT1233', 2, 8.5),
+(8, 'TG1010', 'ICT1233', 3, 9.0),
+(9, 'TG1010', 'ICT1242', 1, 8.5),
+(10, 'TG1010', 'ICT1242', 2, 9.0),
+(11, 'TG1010', 'ICT1242', 3, 7.5),
+(12, 'TG1010', 'ICT1253', 1, 9.0),
+(13, 'TG1010', 'ICT1253', 2, 8.0),
+(14, 'TG1010', 'ICT1253', 3, 8.5),
+(15, 'TG1010', 'TCS1212', 1, 8.0),
+(16, 'TG1010', 'TCS1212', 2, 9.0),
+(17, 'TG1010', 'TMS1233', 1, 9.5),
+(18, 'TG1010', 'TMS1233', 2, 8.0);
+(19, 'TG1010', 'ICT1222', 1, NULL); --for this course does not have any quiz but COALESCE represent null value as 0
+Insert data for MID marks TABLE
+
+INSERT INTO mid_marks (reg_no, course_code, Practical, Theory)
+VALUES 
+('TG1010', 'ICT1212', NULL, 15.5),
+('TG1010', 'ENG1222', NULL, 20.0),
+('TG1010', 'ICT1222', NULL, 15.5),
+('TG1010', 'ICT1233', 8.5, NULL),
+('TG1010', 'ICT1242', NULL, 18.0),
+('TG1010', 'TCS1212', NULL, 15.5),
+('TG1010', 'TMS1233', NULL, 21.5);
+
+Assessment marks TABLE structure
+
+CREATE TABLE ASSESSMENT_MARKS
+     (
+     assessment_id INT AUTO_INCREMENT,
+     reg_no CHAR(6),
+     course_code CHAR(7),
+    assessment_name VARCHAR(50),
+     assessment_marks DECIMAL(4,2),
+     PRIMARY KEY(assessment_id),
+     FOREIGN KEY(reg_no) REFERENCES student(reg_no),
+     FOREIGN KEY(course_code) REFERENCES course_unit(course_code)
+     );
+
+Insert data for Assessment marks TABLE
+
+INSERT INTO assessment_marks(reg_no, course_code, assessment_name, assessment_marks)
+VALUES
+('TG1010', 'ICT1222', 'DBMS Mini Project', 15.0),
+('TG1010', 'ENG1222', 'Note taking skill-Short Note', 4.0),
+('TG1010', 'ICT1233', 'Mini Project', 11.5),
+('TG1010', 'ICT1233', 'Tutorial Submission', 3.8),
+('TG1010', 'ICT1242', 'Assignment', 8.5),
+('TG1010', 'ICT1253', 'In class test-Theory', 8.0),
+('TG1010', 'ICT1253', 'In class test-Practical', 9.0),
+('TG1010', 'TCS1212', 'Case study CSR of choosen company', 7.5),
+('TG1010', 'TMS1233', 'Tutorial / Assignment Submission', 4.0);
+
+
+View for TOTAL assessment marks
+
+CREATE VIEW tot_assessment_marks AS
+SELECT reg_no, course_code, SUM(assessment_marks) AS total_assessment_marks
+FROM assessment_marks
+GROUP BY reg_no, course_code;
+
+VIEW for TOTAL ca marks
+
+CREATE VIEW ca_marks AS
+SELECT
+    Q.reg_no,
+    Q.course_code,
+    COALESCE(Q.total_quiz_marks, 0) + COALESCE(A.total_assessment_marks, 0) + COALESCE(M.total_mid_marks, 0) AS ca_marks
+FROM tot_quiz_marks Q
+LEFT JOIN tot_assessment_marks A ON Q.reg_no = A.reg_no AND Q.course_code = A.course_code
+LEFT JOIN (
+    SELECT reg_no, course_code, COALESCE(SUM(Practical), 0) + COALESCE(SUM(Theory), 0) AS total_mid_marks
+    FROM mid_marks
+    GROUP BY reg_no, course_code
+) M ON Q.reg_no = M.reg_no AND Q.course_code = M.course_code;
+
+
+VIEW for CA pass status
+
+CREATE VIEW ca_pass_status AS
+SELECT
+    cmv.reg_no,
+    cmv.course_code,
+    cmv.ca_marks,
+    CASE
+        WHEN cmv.ca_marks >=
+            CASE
+                WHEN cmv.course_code = 'ENG1222' THEN 40
+                WHEN cmv.course_code = 'ICT1212' THEN 30
+                WHEN cmv.course_code = 'ICT1222' THEN 40
+                WHEN cmv.course_code = 'ICT1233' THEN 40
+                WHEN cmv.course_code = 'ICT1242' THEN 40
+                WHEN cmv.course_code = 'ICT1253' THEN 30
+                WHEN cmv.course_code = 'TCS1212' THEN 40
+                WHEN cmv.course_code = 'TMS1233' THEN 40
+                ELSE 0
+            END * 0.5 THEN 'Pass'
+        ELSE 'Fail'
+    END AS pass_status
+FROM ca_marks cmv;
+
+CA marks for whole batch giving course_code
+DELIMITER //
+CREATE PROCEDURE GetCAMarksSummaryGivingcourse_code(IN courseCode CHAR(7))
+BEGIN
+    SELECT
+        cps.reg_no,
+        cps.course_code,
+        cps.ca_marks,
+        cps.pass_status
+    FROM ca_pass_status cps
+    WHERE cps.course_code = courseCode;
+END;
+//
+DELIMITER ;
+
+ca_marks giving course_code and reg_no
+DELIMITER //
+CREATE PROCEDURE GetCAMarksSummaryGivingcourse_codewithReg_no(IN courseCode CHAR(7), IN regNo CHAR(6))
+BEGIN
+    SELECT
+        cps.reg_no,
+        cps.course_code,
+        cps.ca_marks,
+        cps.pass_status
+    FROM ca_pass_status cps
+    WHERE cps.course_code = courseCode AND cps.reg_no = regNo;
+END;
+//
+DELIMITER ;
+
+CA marks details specific student
+
+DELIMITER //
+CREATE PROCEDURE GetCAMarksSummaryByRegNo(IN regNo CHAR(6))
+BEGIN
+    SELECT
+        cps.course_code,
+        cps.ca_marks,
+        cps.pass_status
+    FROM ca_pass_status cps
+    WHERE cps.reg_no = regNo;
+END;
+//
+DELIMITER ;
+
+FINAL EXAM sit eligibility check whole batch by giving course code
+
+DELIMITER //
+CREATE PROCEDURE CheckBatchEligibility(IN courseCode CHAR(7))
+BEGIN
+    SELECT
+        cp.reg_no AS Registration_Number,
+        CASE
+            WHEN (
+                cp.ca_marks >= 50.00 AND ap.attendance_percentage >= 0.80
+            ) THEN 'Eligible'
+            ELSE 'Not Eligible'
+        END AS Eligibility_Status
+    FROM ca_pass_status cp
+    JOIN student_attendance_percentage1 ap ON cp.reg_no = ap.reg_no
+    WHERE cp.course_code = courseCode;
+END;
+//
+DELIMITER ;
+
+Giving student regno and course_unit eligibility sit for the final exam
+
+DELIMITER //
+CREATE PROCEDURE CheckStudentEligibility(IN in_regno CHAR(6))
+BEGIN
+    SELECT
+        cp.course_code AS Course_Code,
+        CASE
+            WHEN (
+                cp.ca_marks >= 50.00 AND ap.attendance_percentage >= 0.80
+            ) THEN 'Eligible'
+            ELSE 'Not Eligible'
+        END AS Eligibility_Status
+    FROM ca_pass_status cp
+    JOIN student_attendance_percentage1 ap ON cp.reg_no = ap.reg_no
+    WHERE cp.reg_no = in_regno;
+END;
+//
+DELIMITER ;
+
+
+
