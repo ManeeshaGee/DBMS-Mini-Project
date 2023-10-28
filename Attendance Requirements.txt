@@ -72,15 +72,15 @@ AS A SUMMARY FOR WHOLE BATCH----------------------------------------------------
 1. by giving the course code
 
 DELIMITER //
-CREATE PROCEDURE GetBatchAttendanceSummary_courseWise(IN courseCode CHAR(7))
+CREATE PROCEDURE GetBatchAttendanceSummary_courseWise2(IN courseCode CHAR(7))
 BEGIN
-    SELECT A.reg_no,A.type,
+    SELECT A.reg_no,c.course_code,A.type,
         (SUM(CASE WHEN A.status = 'Present' THEN A.lecture_time_per_session ELSE 0 END) / c.lecture_hours)*100 AS attendance_percentage,
         CASE WHEN (SUM(CASE WHEN A.status = 'Present' THEN A.lecture_time_per_session ELSE 0 END) / c.lecture_hours)*100 >= 80.00 THEN 'Eligible' ELSE 'Not Eligible' END AS eligibility
     FROM attendance A
     JOIN course_unit c ON A.course_code = c.course_code
     WHERE A.course_code = courseCode
-    GROUP BY A.reg_no,A.type;
+    GROUP BY A.reg_no,c.course_code,A.type;
 END;
 //
 DELIMITER ;
@@ -90,7 +90,7 @@ CALL GetBatchAttendanceSummary_courseWise();
 2. For whole batch and all the subjects
 
 DELIMITER //
-CREATE PROCEDURE GetBatchAttendanceForallsubjectswitheligibility()
+CREATE PROCEDURE GetBatchAttendanceForallsubjectswitheligibility1()
 BEGIN
     SELECT A.reg_no,c.course_code,A.type,
     (SUM(CASE WHEN A.status = "Present" OR A.status = "Medical Leave" THEN A.lecture_time_per_session ELSE 0 END)/c.lecture_hours)*100 AS Attendance_percentage,
