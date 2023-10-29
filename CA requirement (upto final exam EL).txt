@@ -47,7 +47,7 @@ VALUES
 (15, 'TG1010', 'TCS1212', 1, 8.0),
 (16, 'TG1010', 'TCS1212', 2, 9.0),
 (17, 'TG1010', 'TMS1233', 1, 9.5),
-(18, 'TG1010', 'TMS1233', 2, 8.0);
+(18, 'TG1010', 'TMS1233', 2, 8.0),
 (19, 'TG1010', 'ICT1222', 1, NULL); --for this course does not have any quiz but COALESCE represent null value as 0
 Insert data for MID marks TABLE
 
