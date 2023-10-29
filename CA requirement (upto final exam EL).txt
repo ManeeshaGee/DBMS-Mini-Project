@@ -187,8 +187,8 @@ FINAL EXAM sit eligibility check whole batch by giving course code
 DELIMITER //
 CREATE PROCEDURE CheckBatchEligibility(IN courseCode CHAR(7))
 BEGIN
-    SELECT
-        cp.reg_no AS Registration_Number,
+    SELECT DISTINCT
+        cp.reg_no AS Registration_Number,cp.course_code AS Course_code,
         CASE
             WHEN (
                 cp.ca_marks >= 50.00 AND ap.attendance_percentage >= 0.80
@@ -207,7 +207,7 @@ Giving student regno and course_unit eligibility sit for the final exam
 DELIMITER //
 CREATE PROCEDURE CheckStudentEligibility(IN in_regno CHAR(6))
 BEGIN
-    SELECT
+    SELECT DISTINCT
         cp.course_code AS Course_Code,
         CASE
             WHEN (
