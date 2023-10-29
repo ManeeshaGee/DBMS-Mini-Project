@@ -135,7 +135,7 @@ SELECT
             END * 0.5 THEN 'Pass'
         ELSE 'Fail'
     END AS pass_status
-FROM ca_marks cmv;
+FROM ca_marks_v cmv;
 
 CA marks for whole batch giving course_code
 DELIMITER //
