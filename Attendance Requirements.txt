@@ -2115,6 +2115,18 @@ VALUES
 ('TG1010', 'ICT1253', 'Approved', 'Theory', '2023-10-20');
 
 
+Medical_submission_for_exam table structure 
+
+CREATE TABLE Medical_submission_for_exam(
+    Medical_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    Reg_no CHAR(6) NOT NULL,
+    Course_code CHAR(7),
+    Status VARCHAR(10),
+    Exam_type VARCHAR(10),
+    date DATE,
+    FOREIGN KEY (Reg_no) REFERENCES Student(Reg_no),
+    FOREIGN KEY (Course_code) REFERENCES Course_unit(Course_code)    
+);
 
 
 
