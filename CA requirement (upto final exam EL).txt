@@ -99,7 +99,7 @@ GROUP BY reg_no, course_code;
 
 VIEW for TOTAL ca marks
 
-CREATE VIEW ca_marks AS
+CREATE VIEW ca_marks_v AS
 SELECT
     Q.reg_no,
     Q.course_code,
