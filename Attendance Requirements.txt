@@ -2111,8 +2111,7 @@ VALUES
 ('TG1013', 'ICT1233', 'Approved', 'Theory', '2023-11-06'),
 ('TG1013', 'ICT1233', 'Approved', 'Practical', '2023-09-18'),
 ('TG1013', 'ICT1233', 'Approved', 'Practical', '2023-11-10'),
-('TG1013', 'ENG1222', 'Approved', 'Theory', '2023-12-13'),
-('TG1010', 'ICT1253', 'Approved', 'Theory', '2023-10-20');
+('TG1013', 'ENG1222', 'Approved', 'Theory', '2023-12-13');
 
 
 Medical_submission_for_exam table structure 
