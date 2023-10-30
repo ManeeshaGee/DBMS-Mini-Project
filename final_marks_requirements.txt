@@ -1,0 +1,114 @@
+final marks calculate (mid marks + ca marks)
+
+CREATE VIEW final_exam_result AS
+SELECT fm.reg_no, fm.course_code,
+    CASE
+        WHEN fm.theory IS NOT NULL AND fm.practical IS NOT NULL THEN (tc.ca_marks + fm.theory + fm.practical)
+        WHEN fm.theory IS NOT NULL THEN (tc.ca_marks + fm.theory)
+        WHEN fm.practical IS NOT NULL THEN (tc.ca_marks + fm.practical)
+        ELSE (tc.ca_marks + fm.theory + fm.practical)
+    END AS final_result
+FROM final_marks fm
+LEFT JOIN ca_marks tc ON fm.reg_no = tc.reg_no AND fm.course_code = tc.course_code;
+
+************************************************************************************************************************
+
+Get final result course code wise
+
+DELIMITER //
+
+CREATE PROCEDURE GetMarksForSubject(IN subjectCode CHAR(7))
+BEGIN
+    SELECT reg_no, final_result
+    FROM final_exam_result
+    WHERE course_code = subjectCode;
+END;
+//
+
+DELIMITER ;
+
+
+************************************************************************************************************************
+
+
+Get final marks enter student regno
+
+DELIMITER //
+
+CREATE PROCEDURE GetMarksForStudent(IN studentRegNo CHAR(6))
+BEGIN
+    SELECT course_code, final_result
+    FROM final_exam_result
+    WHERE reg_no = studentRegNo;
+END;
+//
+
+DELIMITER ;
+
+
+************************************************************************************************************************
+
+
+view for student grades
+
+CREATE VIEW StudentGrades AS
+SELECT
+    fm.reg_no,
+	fm.course_code,
+    CASE
+        WHEN fm.final_result >= 85.0 THEN 'A+'
+        WHEN fm.final_result >= 75.0 THEN 'A'
+        WHEN fm.final_result >= 70.0 THEN 'A-'
+        WHEN fm.final_result >= 65.0 THEN 'B+'
+        WHEN fm.final_result >= 60.0 THEN 'B'
+        WHEN fm.final_result >= 55.0 THEN 'B-'
+        WHEN fm.final_result >= 50.0 THEN 'C+'
+        WHEN fm.final_result >= 45.0 THEN 'C'
+        WHEN fm.final_result >= 40.0 THEN 'C-'
+        WHEN fm.final_result >= 35.0 THEN 'D+'
+        WHEN fm.final_result >= 30.0 THEN 'D'
+        ELSE 'E'
+    END AS student_grade
+FROM final_exam_result fm;
+
+
+************************************************************************************************************************
+
+Get student grades course_code 
+
+DELIMITER //
+
+CREATE PROCEDURE GetStudentGradesByCourse(IN courseCode CHAR(7))
+BEGIN
+    SELECT DISTINCT s.reg_no, s.student_grade
+    FROM StudentGrades s
+    WHERE EXISTS (
+        SELECT 1
+        FROM final_exam_result fm
+        WHERE fm.reg_no = s.reg_no
+        AND fm.course_code = courseCode
+    );
+END;
+//
+
+DELIMITER ;
+
+
+************************************************************************************************************************
+
+Get grades for each student 
+
+DELIMITER //
+
+CREATE PROCEDURE GetStudentGradesByRegNo(IN studentRegNo CHAR(6))
+BEGIN
+    SELECT s.course_code, s.student_grade
+    FROM StudentGrades s
+    WHERE s.reg_no = studentRegNo;
+END;
+//
+
+DELIMITER ;
+
+
+************************************************************************************************************************
