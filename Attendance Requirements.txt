@@ -409,6 +409,15 @@ END;
 //
 DELIMITER ;
 
+A view to see attendance percentage of students
+
+CREATE VIEW student_attendance_percentage AS
+SELECT A.reg_no, A.course_code,A.type,
+    (SUM(CASE WHEN A.status = 'Present' THEN A.lecture_time_per_session ELSE 0 END) / c.lecture_hours)*100 AS attendance_percentage
+FROM attendance A
+JOIN course_unit c ON A.course_code = c.course_code
+GROUP BY A.reg_no, A.course_code,A.type;
+
 ///////////////////////////////////////////////////////////Attendance DATA//////////////////////////////////////////////////////////////////////////////
 
 ('TG1010', 'ICT1212', 2, '2023-09-01','Present',1,'Theory'),
@@ -2018,6 +2027,114 @@ DELIMITER ;
 ('TG1019', 'ENG1222', 2, '2023-11-30', 'Absent',13,'Theory'),
 ('TG1019', 'ENG1222', 2, '2023-12-06', 'Absent',14,'Theory'),
 ('TG1019', 'ENG1222', 2, '2023-12-13', 'Medical Leave',15,'Theory');
+
+Medical_submission table structure
+
+
+ DESC MEDICAL_SUBMISSION;
++-------------+-------------+------+-----+---------+----------------+
+| Field       | Type        | Null | Key | Default | Extra          |
++-------------+-------------+------+-----+---------+----------------+
+| Medical_id  | int         | NO   | PRI | NULL    | auto_increment |
+| Reg_no      | char(6)     | YES  | MUL | NULL    |                |
+| Course_code | char(7)     | YES  | MUL | NULL    |                |
+| Status      | varchar(25) | YES  |     | NULL    |                |
+| type        | varchar(25) | YES  |     | NULL    |                |
+| date        | date        | YES  |     | NULL    |                |
++-------------+-------------+------+-----+---------+----------------+
+6 rows in set (0.00 sec)
+
+INSERT INTO table_name (Reg_no,course_code,status,type,date)
+VALUES 
+('TG1010', 'ICT1212', 'Approved', 'Theory'  ,'2023-11-30'),
+('TG1010', 'ICT1222',  'Approved', 'Practical','2023-12-06'),
+('TG1010', 'ICT1253' ,'Approved' ,'Practical','2023-09-23'),
+('TG1010', 'TMS1253', 'Approved', 'Theory', '2023-10-09'),
+('TG1010', 'TCS1212', 'Approved', 'Theory', '2023-12-10'),
+('TG1010', 'ICT1233', 'Approved', 'Theory', '2023-11-23'),
+('TG1014', 'ICT1242', 'Approved', 'Theory', '2023-11-04'),
+('TG1014', 'TCS1212', 'Approved', 'Theory', '2023-11-13'),
+('TG1014', 'TCS1212', 'Approved', 'Theory', '2023-12-10'),
+('TG1014', 'ICT1233', 'Approved', 'Theory', '2023-11-23'),
+('TG1014', 'ICT1233', 'Approved', 'Practical', '2023-11-10'),
+('TG1014', 'ENG1222', 'Approved', 'Theory', '2023-09-19'),
+('TG1014', 'ENG1222', 'Approved', 'Theory', '2023-12-13'),
+('TG1016', 'ICT1212', 'Approved', 'Theory', '2023-09-22'),
+('TG1016', 'ICT1222', 'Approved', 'Practical', '2023-09-29'),
+('TG1016', 'ICT1233', 'Approved', 'Theory', '2023-11-23'),
+('TG1016', 'ICT1233', 'Approved', 'Practical', '2023-10-12'),
+('TG1017', 'ICT1212', 'Approved', 'Theory', '2023-11-30'),
+('TG1017', 'ICT1212', 'Approved', 'Theory', '2023-12-06'),
+('TG1017', 'ICT1222', 'Approved', 'Practical', '2023-10-05'),
+('TG1017', 'ICT1222', 'Approved', 'Practical', '2023-11-30'),
+('TG1017', 'ICT1222', 'Approved', 'Practical', '2023-12-06'),
+('TG1017', 'ICT1253', 'Approved', 'Theory', '2023-12-07'),
+('TG1017', 'ICT1253', 'Approved', 'Practical', '2023-12-07'),
+('TG1017', 'TMS1253', 'Approved', 'Theory', '2023-10-09'),
+('TG1017', 'ICT1242', 'Approved', 'Theory', '2023-12-06'),
+('TG1017', 'TCS1212', 'Approved', 'Theory', '2023-12-10'),
+('TG1017', 'ICT1233', 'Approved', 'Theory', '2023-11-23'),
+('TG1017', 'ICT1233', 'Approved', 'Practical', '2023-11-10'),
+('TG1018', 'ICT1212', 'Approved', 'Theory', '2023-11-30'),
+('TG1018', 'ICT1222', 'Approved', 'Practical', '2023-12-06'),
+('TG1018', 'ICT1253', 'Approved', 'Theory', '2023-11-11'),
+('TG1018', 'ICT1253', 'Approved', 'Practical', '2023-09-23'),
+('TG1018', 'TMS1253', 'Approved', 'Theory', '2023-10-09'),
+('TG1018', 'TCS1212', 'Approved', 'Theory', '2023-11-06'),
+('TG1018', 'TCS1212', 'Approved', 'Theory', '2023-11-13'),
+('TG1018', 'TCS1212', 'Approved', 'Theory', '2023-12-10'),
+('TG1018', 'ICT1233', 'Approved', 'Theory', '2023-11-23'),
+('TG1018', 'ICT1233', 'Approved', 'Practical', '2023-09-18'),
+('TG1018', 'ICT1233', 'Approved', 'Practical', '2023-11-10'),
+('TG1018', 'ENG1222', 'Approved', 'Theory', '2023-09-03'),
+('TG1018', 'ENG1222', 'Approved', 'Theory', '2023-12-13'),
+('TG1019', 'ICT1212', 'Approved', 'Theory', '2023-12-06'),
+('TG1019', 'ICT1253', 'Approved', 'Practical', '2023-09-23'),
+('TG1019', 'TMS1253', 'Approved', 'Theory', '2023-10-09'),
+('TG1019', 'TMS1253', 'Approved', 'Theory', '2023-12-09'),
+('TG1019', 'ICT1242', 'Approved', 'Theory', '2023-11-04'),
+('TG1019', 'TCS1212', 'Approved', 'Theory', '2023-11-13'),
+('TG1019', 'ICT1233', 'Approved', 'Theory', '2023-11-23'),
+('TG1019', 'ICT1233', 'Approved', 'Practical', '2023-11-10'),
+('TG1019', 'ENG1222', 'Approved', 'Theory', '2023-09-19'),
+('TG1019', 'ENG1222', 'Approved', 'Theory', '2023-10-16'),
+('TG1019', 'ENG1222', 'Approved', 'Theory', '2023-12-13'),
+('TG1011', 'ICT1212', 'Approved', 'Theory', '2023-09-22'),
+('TG1011', 'ICT1222', 'Approved', 'Practical', '2023-09-29'),
+('TG1011', 'ICT1233', 'Approved', 'Theory', '2023-11-23'),
+('TG1012', 'ICT1212', 'Approved', 'Theory', '2023-11-30'),
+('TG1012', 'ICT1222', 'Approved', 'Practical', '2023-12-06'),
+('TG1012', 'ICT1253', 'Approved', 'Practical', '2023-09-23'),
+('TG1012', 'TMS1253', 'Approved', 'Theory', '2023-10-09'),
+('TG1012', 'ICT1242', 'Approved', 'Theory', '2023-12-06'),
+('TG1012', 'TCS1212', 'Approved', 'Theory', '2023-12-10'),
+('TG1012', 'ICT1233', 'Approved', 'Theory', '2023-11-23'),
+('TG1012', 'ICT1233', 'Approved', 'Practical', '2023-11-10'),
+('TG1013', 'ICT1212', 'Approved', 'Theory', '2023-11-30'),
+('TG1013', 'ICT1222', 'Approved', 'Practical', '2023-12-06'),
+('TG1013', 'ICT1253', 'Approved', 'Practical', '2023-09-23'),
+('TG1013', 'TMS1253', 'Approved', 'Theory', '2023-10-09'),
+('TG1013', 'TCS1212', 'Approved', 'Theory', '2023-11-06'),
+('TG1013', 'TCS1212', 'Approved', 'Theory', '2023-12-10'),
+('TG1013', 'ICT1233', 'Approved', 'Theory', '2023-11-23'),
+('TG1013', 'ICT1233', 'Approved', 'Theory', '2023-11-06'),
+('TG1013', 'ICT1233', 'Approved', 'Practical', '2023-09-18'),
+('TG1013', 'ICT1233', 'Approved', 'Practical', '2023-11-10'),
+('TG1013', 'ENG1222', 'Approved', 'Theory', '2023-12-13');
+
+
+Medical_submission_for_exam table structure 
+
+CREATE TABLE Medical_submission_for_exam(
+    Medical_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    Reg_no CHAR(6) NOT NULL,
+    Course_code CHAR(7),
+    Status VARCHAR(10),
+    Exam_type VARCHAR(10),
+    date DATE,
+    FOREIGN KEY (Reg_no) REFERENCES Student(Reg_no),
+    FOREIGN KEY (Course_code) REFERENCES Course_unit(Course_code)    
+);
 
 
 

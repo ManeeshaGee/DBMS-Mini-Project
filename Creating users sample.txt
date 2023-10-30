@@ -59,18 +59,67 @@ Creating user Technical Officer and granting privileges
 
 CREATE USER 'TechnicalOfficer'@'localhost' IDENTIFIED BY 'TO1234';
 
-GRANT SELECT,SHOW VIEW,INSERT,UPDATE ON LMS.* TO 'TechnicalOfficer'@'localhost';
+GRANT SELECT,SHOW VIEW,INSERT,UPDATE ON LMS.ATTENDANCE TO 'TechnicalOfficer'@'localhost';
+GRANT SELECT,SHOW VIEW,INSERT,UPDATE ON LMS.student_attendance_percentage TO 'TechnicalOfficer'@'localhost';
+GRANT SELECT,SHOW VIEW,INSERT,UPDATE ON LMS.Medical_submission_for_exam TO 'TechnicalOfficer'@'localhost';
+GRANT SELECT,SHOW VIEW,INSERT,UPDATE ON LMS.MEDICAL_SUBMISSION TO 'TechnicalOfficer'@'localhost';
+
+
+GRANT EXECUTE ON PROCEDURE LMS.GetHighAttendanceStudents TO 'TechnicalOfficer'@'localhost';
+GRANT EXECUTE ON PROCEDURE LMS.GetLowAttendanceStudents TO 'TechnicalOfficer'@'localhost';
+GRANT EXECUTE ON PROCEDURE LMS.GetHighMedicalAttendanceStudents TO 'TechnicalOfficer'@'localhost';
+GRANT EXECUTE ON PROCEDURE LMS.GetLowMedicalAttendanceStudents TO 'TechnicalOfficer'@'localhost';
+GRANT EXECUTE ON PROCEDURE LMS.GetBatchAttendanceSummary_courseWise2 TO 'TechnicalOfficer'@'localhost';
+GRANT EXECUTE ON PROCEDURE LMS.GetBatchAttendanceForallsubjectswitheligibility TO 'TechnicalOfficer'@'localhost';
+GRANT EXECUTE ON PROCEDURE LMS.GetSummaryofAttendanceGivingRegistrationNumber TO 'TechnicalOfficer'@'localhost';
+GRANT EXECUTE ON PROCEDURE LMS.GetAttendanceGivingRegistrationNumberandCourseCode TO 'TechnicalOfficer'@'localhost';
+GRANT EXECUTE ON PROCEDURE LMS.GetAttendanceForWholeBatch TO 'TechnicalOfficer'@'localhost';
+GRANT EXECUTE ON PROCEDURE LMS.Get_Att_Elig_For_Sub_Theo_OR_Prac_Each TO 'TechnicalOfficer'@'localhost';
+GRANT EXECUTE ON PROCEDURE LMS.Get_Att_Elig_For_Sub_Theo_And_Prac_Each TO 'TechnicalOfficer'@'localhost';
+GRANT EXECUTE ON PROCEDURE LMS.Get_Att_For_Sub_Theo_OR_Prac_Each TO 'TechnicalOfficer'@'localhost';
+GRANT EXECUTE ON PROCEDURE LMS.Get_Att_For_Sub_Theo_And_Prac_Each TO 'TechnicalOfficer'@'localhost';
+GRANT EXECUTE ON PROCEDURE LMS.Get_Att_Elig_For_Sub_Theo_OR_Prac_Each_Medic TO 'TechnicalOfficer'@'localhost';
+GRANT EXECUTE ON PROCEDURE LMS.Get_Att_Elig_For_Sub_Theo_And_Prac_Each_Medic TO 'TechnicalOfficer'@'localhost';
+GRANT EXECUTE ON PROCEDURE LMS.Get_Att_For_Sub_Theo_OR_Prac_Each_Medic TO 'TechnicalOfficer'@'localhost';
+GRANT EXECUTE ON PROCEDURE LMS.Get_Att_For_Sub_Theo_And_Prac_Each_Medic TO 'TechnicalOfficer'@'localhost';
+GRANT EXECUTE ON PROCEDURE LMS.Get_att_Elig_For_Theo_Or_Prac_Sub TO 'TechnicalOfficer'@'localhost';
+GRANT EXECUTE ON PROCEDURE LMS.Get_att_Elig_For_Theo_And_Prac_Sub TO 'TechnicalOfficer'@'localhost';
+GRANT EXECUTE ON PROCEDURE LMS.Get_att_Elig_For_Theo_Or_Prac_Sub_Medic TO 'TechnicalOfficer'@'localhost';
+GRANT EXECUTE ON PROCEDURE LMS.Get_att_Elig_For_Theo_And_Prac_Sub_Medic TO 'TechnicalOfficer'@'localhost';
 
 FLUSH PRIVILEGES;
 
 mysql> SHOW GRANTS FOR 'TechnicalOfficer'@'localhost';
-+--------------------------------------------------------------------------------------+
-| Grants for TechnicalOfficer@localhost                                                |
-+--------------------------------------------------------------------------------------+
-| GRANT USAGE ON *.* TO `TechnicalOfficer`@`localhost`                                 |
-| GRANT SELECT, INSERT, UPDATE, SHOW VIEW ON `lms`.* TO `TechnicalOfficer`@`localhost` |
-+--------------------------------------------------------------------------------------+
-2 rows in set (0.00 sec)
++-------------------------------------------------------------------------------------------------------------------------+
+| Grants for TechnicalOfficer@localhost                                                                                   |
++-------------------------------------------------------------------------------------------------------------------------+
+| GRANT USAGE ON *.* TO `TechnicalOfficer`@`localhost`                                                                    |
+| GRANT SELECT, INSERT, UPDATE, SHOW VIEW ON `lms`.`student_attendance_percentage` TO `TechnicalOfficer`@`localhost`      |
+| GRANT SELECT, INSERT, UPDATE, SHOW VIEW ON `lms`.`medical_submission_for_exam` TO `TechnicalOfficer`@`localhost`        |
+| GRANT SELECT, INSERT, UPDATE, SHOW VIEW ON `lms`.`attendance` TO `TechnicalOfficer`@`localhost`                         |
+| GRANT SELECT, INSERT, UPDATE, SHOW VIEW ON `lms`.`medical_submission` TO `TechnicalOfficer`@`localhost`                 |
+| GRANT EXECUTE ON PROCEDURE `lms`.`getbatchattendanceforallsubjectswitheligibility` TO `TechnicalOfficer`@`localhost`    |
+| GRANT EXECUTE ON PROCEDURE `lms`.`gethighattendancestudents` TO `TechnicalOfficer`@`localhost`                          |
+| GRANT EXECUTE ON PROCEDURE `lms`.`get_att_elig_for_theo_and_prac_sub_medic` TO `TechnicalOfficer`@`localhost`           |
+| GRANT EXECUTE ON PROCEDURE `lms`.`gethighmedicalattendancestudents` TO `TechnicalOfficer`@`localhost`                   |
+| GRANT EXECUTE ON PROCEDURE `lms`.`get_att_elig_for_sub_theo_and_prac_each` TO `TechnicalOfficer`@`localhost`            |
+| GRANT EXECUTE ON PROCEDURE `lms`.`get_att_elig_for_sub_theo_and_prac_each_medic` TO `TechnicalOfficer`@`localhost`      |
+| GRANT EXECUTE ON PROCEDURE `lms`.`get_att_elig_for_sub_theo_or_prac_each_medic` TO `TechnicalOfficer`@`localhost`       |
+| GRANT EXECUTE ON PROCEDURE `lms`.`get_att_elig_for_theo_or_prac_sub_medic` TO `TechnicalOfficer`@`localhost`            |
+| GRANT EXECUTE ON PROCEDURE `lms`.`getsummaryofattendancegivingregistrationnumber` TO `TechnicalOfficer`@`localhost`     |
+| GRANT EXECUTE ON PROCEDURE `lms`.`get_att_elig_for_theo_and_prac_sub` TO `TechnicalOfficer`@`localhost`                 |
+| GRANT EXECUTE ON PROCEDURE `lms`.`get_att_elig_for_theo_or_prac_sub` TO `TechnicalOfficer`@`localhost`                  |
+| GRANT EXECUTE ON PROCEDURE `lms`.`getattendanceforwholebatch` TO `TechnicalOfficer`@`localhost`                         |
+| GRANT EXECUTE ON PROCEDURE `lms`.`getattendancegivingregistrationnumberandcoursecode` TO `TechnicalOfficer`@`localhost` |
+| GRANT EXECUTE ON PROCEDURE `lms`.`getbatchattendancesummary_coursewise2` TO `TechnicalOfficer`@`localhost`              |
+| GRANT EXECUTE ON PROCEDURE `lms`.`get_att_elig_for_sub_theo_or_prac_each` TO `TechnicalOfficer`@`localhost`             |
+| GRANT EXECUTE ON PROCEDURE `lms`.`getlowmedicalattendancestudents` TO `TechnicalOfficer`@`localhost`                    |
+| GRANT EXECUTE ON PROCEDURE `lms`.`get_att_for_sub_theo_or_prac_each` TO `TechnicalOfficer`@`localhost`                  |
+| GRANT EXECUTE ON PROCEDURE `lms`.`get_att_for_sub_theo_and_prac_each` TO `TechnicalOfficer`@`localhost`                 |
+| GRANT EXECUTE ON PROCEDURE `lms`.`getlowattendancestudents` TO `TechnicalOfficer`@`localhost`                           |
+| GRANT EXECUTE ON PROCEDURE `lms`.`get_att_for_sub_theo_or_prac_each_medic` TO `TechnicalOfficer`@`localhost`            |
+| GRANT EXECUTE ON PROCEDURE `lms`.`get_att_for_sub_theo_and_prac_each_medic` TO `TechnicalOfficer`@`localhost`           |
++-------------------------------------------------------------------------------------------------------------------------+
 
 #Read, write and update permissions are allowed only for attendance related tables/views.
 **********************************************************************************************************
