@@ -59,7 +59,7 @@ Creating user Technical Officer and granting privileges
 
 CREATE USER 'TechnicalOfficer'@'localhost' IDENTIFIED BY 'TO1234';
 
-GRANT SELECT,SHOW VIEW,INSERT,UPDATE ON LMS.* TO 'TechnicalOfficer'@'localhost';
+GRANT SELECT,SHOW VIEW,INSERT,UPDATE ON LMS.ATTENDANCE TO 'TechnicalOfficer'@'localhost';
 
 FLUSH PRIVILEGES;
 
