@@ -409,6 +409,15 @@ END;
 //
 DELIMITER ;
 
+A view to see attendance percentage of students
+
+CREATE VIEW student_attendance_percentage AS
+SELECT A.reg_no, A.course_code,A.type,
+    (SUM(CASE WHEN A.status = 'Present' THEN A.lecture_time_per_session ELSE 0 END) / c.lecture_hours)*100 AS attendance_percentage
+FROM attendance A
+JOIN course_unit c ON A.course_code = c.course_code
+GROUP BY A.reg_no, A.course_code,A.type;
+
 ///////////////////////////////////////////////////////////Attendance DATA//////////////////////////////////////////////////////////////////////////////
 
 ('TG1010', 'ICT1212', 2, '2023-09-01','Present',1,'Theory'),
