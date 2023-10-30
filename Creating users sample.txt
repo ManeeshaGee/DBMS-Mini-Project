@@ -87,12 +87,34 @@ GRANT EXECUTE ON PROCEDURE LMS.Get_att_Elig_For_Theo_And_Prac_Sub_Medic TO 'Tech
 FLUSH PRIVILEGES;
 
 mysql> SHOW GRANTS FOR 'TechnicalOfficer'@'localhost';
-+--------------------------------------------------------------------------------------+
-| Grants for TechnicalOfficer@localhost                                                |
-+--------------------------------------------------------------------------------------+
-| GRANT USAGE ON *.* TO `TechnicalOfficer`@`localhost`                                 |
-| GRANT SELECT, INSERT, UPDATE, SHOW VIEW ON `lms`.* TO `TechnicalOfficer`@`localhost` |
-+--------------------------------------------------------------------------------------+
++-------------------------------------------------------------------------------------------------------------------------+
+| Grants for TechnicalOfficer@localhost                                                                                   |
++-------------------------------------------------------------------------------------------------------------------------+
+| GRANT USAGE ON *.* TO `TechnicalOfficer`@`localhost`                                                                    |
+| GRANT SELECT, INSERT, UPDATE, SHOW VIEW ON `lms`.`attendance` TO `TechnicalOfficer`@`localhost`                         |
+| GRANT SELECT, INSERT, UPDATE, SHOW VIEW ON `lms`.`student_attendance_percentage` TO `TechnicalOfficer`@`localhost`      |
+| GRANT EXECUTE ON PROCEDURE `lms`.`getbatchattendanceforallsubjectswitheligibility` TO `TechnicalOfficer`@`localhost`    |
+| GRANT EXECUTE ON PROCEDURE `lms`.`gethighattendancestudents` TO `TechnicalOfficer`@`localhost`                          |
+| GRANT EXECUTE ON PROCEDURE `lms`.`get_att_elig_for_theo_and_prac_sub_medic` TO `TechnicalOfficer`@`localhost`           |
+| GRANT EXECUTE ON PROCEDURE `lms`.`gethighmedicalattendancestudents` TO `TechnicalOfficer`@`localhost`                   |
+| GRANT EXECUTE ON PROCEDURE `lms`.`get_att_elig_for_sub_theo_and_prac_each` TO `TechnicalOfficer`@`localhost`            |
+| GRANT EXECUTE ON PROCEDURE `lms`.`get_att_elig_for_sub_theo_and_prac_each_medic` TO `TechnicalOfficer`@`localhost`      |
+| GRANT EXECUTE ON PROCEDURE `lms`.`get_att_elig_for_sub_theo_or_prac_each_medic` TO `TechnicalOfficer`@`localhost`       |
+| GRANT EXECUTE ON PROCEDURE `lms`.`get_att_elig_for_theo_or_prac_sub_medic` TO `TechnicalOfficer`@`localhost`            |
+| GRANT EXECUTE ON PROCEDURE `lms`.`getsummaryofattendancegivingregistrationnumber` TO `TechnicalOfficer`@`localhost`     |
+| GRANT EXECUTE ON PROCEDURE `lms`.`get_att_elig_for_theo_and_prac_sub` TO `TechnicalOfficer`@`localhost`                 |
+| GRANT EXECUTE ON PROCEDURE `lms`.`get_att_elig_for_theo_or_prac_sub` TO `TechnicalOfficer`@`localhost`                  |
+| GRANT EXECUTE ON PROCEDURE `lms`.`getattendanceforwholebatch` TO `TechnicalOfficer`@`localhost`                         |
+| GRANT EXECUTE ON PROCEDURE `lms`.`getattendancegivingregistrationnumberandcoursecode` TO `TechnicalOfficer`@`localhost` |
+| GRANT EXECUTE ON PROCEDURE `lms`.`getbatchattendancesummary_coursewise2` TO `TechnicalOfficer`@`localhost`              |
+| GRANT EXECUTE ON PROCEDURE `lms`.`get_att_elig_for_sub_theo_or_prac_each` TO `TechnicalOfficer`@`localhost`             |
+| GRANT EXECUTE ON PROCEDURE `lms`.`getlowmedicalattendancestudents` TO `TechnicalOfficer`@`localhost`                    |
+| GRANT EXECUTE ON PROCEDURE `lms`.`get_att_for_sub_theo_or_prac_each` TO `TechnicalOfficer`@`localhost`                  |
+| GRANT EXECUTE ON PROCEDURE `lms`.`get_att_for_sub_theo_and_prac_each` TO `TechnicalOfficer`@`localhost`                 |
+| GRANT EXECUTE ON PROCEDURE `lms`.`getlowattendancestudents` TO `TechnicalOfficer`@`localhost`                           |
+| GRANT EXECUTE ON PROCEDURE `lms`.`get_att_for_sub_theo_or_prac_each_medic` TO `TechnicalOfficer`@`localhost`            |
+| GRANT EXECUTE ON PROCEDURE `lms`.`get_att_for_sub_theo_and_prac_each_medic` TO `TechnicalOfficer`@`localhost`           |
++-------------------------------------------------------------------------------------------------------------------------+
 2 rows in set (0.00 sec)
 
 #Read, write and update permissions are allowed only for attendance related tables/views.
