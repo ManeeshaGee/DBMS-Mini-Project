@@ -14,6 +14,61 @@ BEGIN
 END;
 //
 DELIMITER ;
++--------+-------------+-----------+-----------------------+
+| reg_no | course_code | type      | attendance_percentage |
++--------+-------------+-----------+-----------------------+
+| TG1010 | ENG1222     | Theory    |               86.6667 |
+| TG1011 | ENG1222     | Theory    |               93.3333 |
+| TG1015 | ENG1222     | Theory    |               80.0000 |
+| TG1016 | ENG1222     | Theory    |              100.0000 |
+| TG1017 | ENG1222     | Theory    |               80.0000 |
+| TG1010 | ICT1212     | Theory    |               80.0000 |
+| TG1012 | ICT1212     | Theory    |               93.3333 |
+| TG1014 | ICT1212     | Theory    |               86.6667 |
+| TG1017 | ICT1212     | Theory    |               86.6667 |
+| TG1019 | ICT1212     | Theory    |               93.3333 |
+| TG1010 | ICT1222     | Practical |               80.0000 |
+| TG1010 | ICT1233     | Theory    |               86.6667 |
+| TG1010 | ICT1233     | Practical |               86.6667 |
+| TG1011 | ICT1233     | Theory    |               86.6667 |
+| TG1011 | ICT1233     | Practical |               80.0000 |
+| TG1012 | ICT1233     | Practical |               86.6667 |
+| TG1014 | ICT1233     | Practical |               80.0000 |
+| TG1015 | ICT1233     | Theory    |               93.3333 |
+| TG1015 | ICT1233     | Practical |               86.6667 |
+| TG1016 | ICT1233     | Theory    |               86.6667 |
+| TG1016 | ICT1233     | Practical |               86.6667 |
+| TG1017 | ICT1233     | Practical |               80.0000 |
+| TG1010 | ICT1242     | Theory    |               80.0000 |
+| TG1011 | ICT1242     | Theory    |               80.0000 |
+| TG1012 | ICT1242     | Theory    |               86.6667 |
+| TG1013 | ICT1242     | Theory    |               93.3333 |
+| TG1014 | ICT1242     | Theory    |               86.6667 |
+| TG1015 | ICT1242     | Theory    |               86.6667 |
+| TG1016 | ICT1242     | Theory    |               80.0000 |
+| TG1017 | ICT1242     | Theory    |               80.0000 |
+| TG1018 | ICT1242     | Theory    |               93.3333 |
+| TG1019 | ICT1242     | Theory    |               80.0000 |
+| TG1010 | ICT1253     | Theory    |               86.6667 |
+| TG1010 | ICT1253     | Practical |               80.0000 |
+| TG1011 | ICT1253     | Theory    |               80.0000 |
+| TG1011 | ICT1253     | Practical |               93.3333 |
+| TG1012 | ICT1253     | Theory    |              100.0000 |
+| TG1012 | ICT1253     | Practical |               93.3333 |
+| TG1013 | ICT1253     | Theory    |               86.6667 |
+| TG1013 | ICT1253     | Practical |               86.6667 |
+| TG1014 | ICT1253     | Theory    |               93.3333 |
+| TG1014 | ICT1253     | Practical |               93.3333 |
+| TG1015 | ICT1253     | Theory    |               80.0000 |
+| TG1015 | ICT1253     | Practical |               80.0000 |
+| TG1016 | ICT1253     | Theory    |               80.0000 |
+| TG1016 | ICT1253     | Practical |               93.3333 |
+| TG1018 | ICT1253     | Practical |               86.6667 |
+| TG1010 | TCS1212     | Theory    |               80.0000 |
+| TG1011 | TCS1212     | Theory    |              100.0000 |
+| TG1016 | TCS1212     | Theory    |              100.0000 |
++--------+-------------+-----------+-----------------------+
+50 rows in set (0.00 sec)
 
 CALL GetHighAttendanceStudents();
 
@@ -31,6 +86,51 @@ BEGIN
 END;
 //
 DELIMITER ;
++--------+-------------+-----------+-----------------------+
+| reg_no | course_code | type      | attendance_percentage |
++--------+-------------+-----------+-----------------------+
+| TG1012 | ENG1222     | Theory    |               73.3333 |
+| TG1013 | ENG1222     | Theory    |               66.6667 |
+| TG1014 | ENG1222     | Theory    |               66.6667 |
+| TG1018 | ENG1222     | Theory    |               66.6667 |
+| TG1019 | ENG1222     | Theory    |               60.0000 |
+| TG1011 | ICT1212     | Theory    |               73.3333 |
+| TG1013 | ICT1212     | Theory    |               66.6667 |
+| TG1015 | ICT1212     | Theory    |               66.6667 |
+| TG1016 | ICT1212     | Theory    |               73.3333 |
+| TG1018 | ICT1212     | Theory    |               66.6667 |
+| TG1011 | ICT1222     | Practical |               73.3333 |
+| TG1012 | ICT1222     | Practical |               66.6667 |
+| TG1013 | ICT1222     | Practical |               60.0000 |
+| TG1014 | ICT1222     | Practical |               60.0000 |
+| TG1015 | ICT1222     | Practical |               73.3333 |
+| TG1016 | ICT1222     | Practical |               73.3333 |
+| TG1017 | ICT1222     | Practical |               66.6667 |
+| TG1018 | ICT1222     | Practical |               60.0000 |
+| TG1019 | ICT1222     | Practical |               60.0000 |
+| TG1012 | ICT1233     | Theory    |               66.6667 |
+| TG1013 | ICT1233     | Theory    |               53.3333 |
+| TG1013 | ICT1233     | Practical |               73.3333 |
+| TG1014 | ICT1233     | Theory    |               73.3333 |
+| TG1017 | ICT1233     | Theory    |               60.0000 |
+| TG1018 | ICT1233     | Theory    |               46.6667 |
+| TG1018 | ICT1233     | Practical |               73.3333 |
+| TG1019 | ICT1233     | Theory    |               66.6667 |
+| TG1019 | ICT1233     | Practical |               60.0000 |
+| TG1017 | ICT1253     | Theory    |               66.6667 |
+| TG1017 | ICT1253     | Practical |               66.6667 |
+| TG1018 | ICT1253     | Theory    |               66.6667 |
+| TG1019 | ICT1253     | Theory    |               66.6667 |
+| TG1019 | ICT1253     | Practical |               73.3333 |
+| TG1012 | TCS1212     | Theory    |               66.6667 |
+| TG1013 | TCS1212     | Theory    |               66.6667 |
+| TG1014 | TCS1212     | Theory    |               66.6667 |
+| TG1015 | TCS1212     | Theory    |               73.3333 |
+| TG1017 | TCS1212     | Theory    |               66.6667 |
+| TG1018 | TCS1212     | Theory    |               53.3333 |
+| TG1019 | TCS1212     | Theory    |               73.3333 |
++--------+-------------+-----------+-----------------------+
+40 rows in set (0.00 sec)
 
 CALL GetLowAttendanceStudents();
 
@@ -51,6 +151,79 @@ DELIMITER ;
 
 CALL GetHighMedicalAttendanceStudents();
 
++--------+-------------+-----------+-----------------------+
+| reg_no | course_code | type      | attendance_percentage |
++--------+-------------+-----------+-----------------------+
+| TG1010 | ENG1222     | Theory    |               86.6667 |
+| TG1011 | ENG1222     | Theory    |               93.3333 |
+| TG1014 | ENG1222     | Theory    |               80.0000 |
+| TG1015 | ENG1222     | Theory    |               80.0000 |
+| TG1016 | ENG1222     | Theory    |              100.0000 |
+| TG1017 | ENG1222     | Theory    |               80.0000 |
+| TG1018 | ENG1222     | Theory    |               80.0000 |
+| TG1019 | ENG1222     | Theory    |               80.0000 |
+| TG1010 | ICT1212     | Theory    |               86.6667 |
+| TG1011 | ICT1212     | Theory    |               80.0000 |
+| TG1012 | ICT1212     | Theory    |              100.0000 |
+| TG1014 | ICT1212     | Theory    |              100.0000 |
+| TG1016 | ICT1212     | Theory    |               80.0000 |
+| TG1017 | ICT1212     | Theory    |              100.0000 |
+| TG1019 | ICT1212     | Theory    |              100.0000 |
+| TG1010 | ICT1222     | Practical |               86.6667 |
+| TG1011 | ICT1222     | Practical |               80.0000 |
+| TG1015 | ICT1222     | Practical |               86.6667 |
+| TG1016 | ICT1222     | Practical |               80.0000 |
+| TG1017 | ICT1222     | Practical |               86.6667 |
+| TG1010 | ICT1233     | Theory    |               93.3333 |
+| TG1010 | ICT1233     | Practical |               86.6667 |
+| TG1011 | ICT1233     | Theory    |               93.3333 |
+| TG1011 | ICT1233     | Practical |               80.0000 |
+| TG1012 | ICT1233     | Practical |               93.3333 |
+| TG1013 | ICT1233     | Practical |               86.6667 |
+| TG1014 | ICT1233     | Theory    |               80.0000 |
+| TG1014 | ICT1233     | Practical |               86.6667 |
+| TG1015 | ICT1233     | Theory    |              100.0000 |
+| TG1015 | ICT1233     | Practical |               93.3333 |
+| TG1016 | ICT1233     | Theory    |               93.3333 |
+| TG1016 | ICT1233     | Practical |               93.3333 |
+| TG1017 | ICT1233     | Practical |               86.6667 |
+| TG1018 | ICT1233     | Practical |               86.6667 |
+| TG1010 | ICT1242     | Theory    |               80.0000 |
+| TG1011 | ICT1242     | Theory    |               80.0000 |
+| TG1012 | ICT1242     | Theory    |               93.3333 |
+| TG1013 | ICT1242     | Theory    |               93.3333 |
+| TG1014 | ICT1242     | Theory    |               93.3333 |
+| TG1015 | ICT1242     | Theory    |               86.6667 |
+| TG1016 | ICT1242     | Theory    |               80.0000 |
+| TG1017 | ICT1242     | Theory    |               86.6667 |
+| TG1018 | ICT1242     | Theory    |               93.3333 |
+| TG1019 | ICT1242     | Theory    |               86.6667 |
+| TG1010 | ICT1253     | Theory    |               86.6667 |
+| TG1010 | ICT1253     | Practical |               86.6667 |
+| TG1011 | ICT1253     | Theory    |               80.0000 |
+| TG1011 | ICT1253     | Practical |               93.3333 |
+| TG1012 | ICT1253     | Theory    |              100.0000 |
+| TG1012 | ICT1253     | Practical |              100.0000 |
+| TG1013 | ICT1253     | Theory    |               86.6667 |
+| TG1013 | ICT1253     | Practical |               93.3333 |
+| TG1014 | ICT1253     | Theory    |               93.3333 |
+| TG1014 | ICT1253     | Practical |              100.0000 |
+| TG1015 | ICT1253     | Theory    |               86.6667 |
+| TG1015 | ICT1253     | Practical |               86.6667 |
+| TG1016 | ICT1253     | Theory    |               80.0000 |
+| TG1016 | ICT1253     | Practical |               93.3333 |
+| TG1018 | ICT1253     | Practical |               93.3333 |
+| TG1019 | ICT1253     | Practical |               80.0000 |
+| TG1010 | TCS1212     | Theory    |               86.6667 |
+| TG1011 | TCS1212     | Theory    |              100.0000 |
+| TG1013 | TCS1212     | Theory    |               80.0000 |
+| TG1014 | TCS1212     | Theory    |               80.0000 |
+| TG1015 | TCS1212     | Theory    |               86.6667 |
+| TG1016 | TCS1212     | Theory    |              100.0000 |
+| TG1019 | TCS1212     | Theory    |               80.0000 |
++--------+-------------+-----------+-----------------------+
+67 rows in set (0.00 sec)
+
 WITH MEDICAL < 80% STUDENTS------------------------------------------------------------->
 
 DELIMITER //
@@ -67,6 +240,34 @@ END;
 DELIMITER ;
 
 CALL GetLowMedicalAttendanceStudents();
++--------+-------------+-----------+-----------------------+
+| reg_no | course_code | type      | attendance_percentage |
++--------+-------------+-----------+-----------------------+
+| TG1012 | ENG1222     | Theory    |               73.3333 |
+| TG1013 | ENG1222     | Theory    |               73.3333 |
+| TG1013 | ICT1212     | Theory    |               73.3333 |
+| TG1015 | ICT1212     | Theory    |               73.3333 |
+| TG1018 | ICT1212     | Theory    |               73.3333 |
+| TG1012 | ICT1222     | Practical |               73.3333 |
+| TG1013 | ICT1222     | Practical |               66.6667 |
+| TG1014 | ICT1222     | Practical |               60.0000 |
+| TG1018 | ICT1222     | Practical |               66.6667 |
+| TG1019 | ICT1222     | Practical |               60.0000 |
+| TG1012 | ICT1233     | Theory    |               73.3333 |
+| TG1013 | ICT1233     | Theory    |               66.6667 |
+| TG1017 | ICT1233     | Theory    |               66.6667 |
+| TG1018 | ICT1233     | Theory    |               53.3333 |
+| TG1019 | ICT1233     | Theory    |               73.3333 |
+| TG1019 | ICT1233     | Practical |               66.6667 |
+| TG1017 | ICT1253     | Theory    |               73.3333 |
+| TG1017 | ICT1253     | Practical |               73.3333 |
+| TG1018 | ICT1253     | Theory    |               73.3333 |
+| TG1019 | ICT1253     | Theory    |               66.6667 |
+| TG1012 | TCS1212     | Theory    |               73.3333 |
+| TG1017 | TCS1212     | Theory    |               73.3333 |
+| TG1018 | TCS1212     | Theory    |               73.3333 |
++--------+-------------+-----------+-----------------------+
+23 rows in set (0.00 sec)
 
 AS A SUMMARY FOR WHOLE BATCH--------------------------------------------------------------->
 1. by giving the course code
@@ -87,6 +288,33 @@ DELIMITER ;
 
 CALL GetBatchAttendanceSummary_courseWise();
 
++--------+-------------+-----------+-----------------------+--------------+
+| reg_no | course_code | type      | attendance_percentage | eligibility  |
++--------+-------------+-----------+-----------------------+--------------+
+| TG1010 | ICT1253     | Theory    |               86.6667 | Eligible     |
+| TG1010 | ICT1253     | Practical |               80.0000 | Eligible     |
+| TG1011 | ICT1253     | Theory    |               80.0000 | Eligible     |
+| TG1011 | ICT1253     | Practical |               93.3333 | Eligible     |
+| TG1012 | ICT1253     | Theory    |              100.0000 | Eligible     |
+| TG1012 | ICT1253     | Practical |               93.3333 | Eligible     |
+| TG1013 | ICT1253     | Theory    |               86.6667 | Eligible     |
+| TG1013 | ICT1253     | Practical |               86.6667 | Eligible     |
+| TG1014 | ICT1253     | Theory    |               93.3333 | Eligible     |
+| TG1014 | ICT1253     | Practical |               93.3333 | Eligible     |
+| TG1015 | ICT1253     | Theory    |               80.0000 | Eligible     |
+| TG1015 | ICT1253     | Practical |               80.0000 | Eligible     |
+| TG1016 | ICT1253     | Theory    |               80.0000 | Eligible     |
+| TG1016 | ICT1253     | Practical |               93.3333 | Eligible     |
+| TG1017 | ICT1253     | Theory    |               66.6667 | Not Eligible |
+| TG1017 | ICT1253     | Practical |               66.6667 | Not Eligible |
+| TG1018 | ICT1253     | Theory    |               66.6667 | Not Eligible |
+| TG1018 | ICT1253     | Practical |               86.6667 | Eligible     |
+| TG1019 | ICT1253     | Theory    |               66.6667 | Not Eligible |
+| TG1019 | ICT1253     | Practical |               73.3333 | Not Eligible |
++--------+-------------+-----------+-----------------------+--------------+
+20 rows in set (0.00 sec)
+
+
 2. For whole batch and all the subjects
 
 DELIMITER //
@@ -102,6 +330,100 @@ BEGIN
 END;
 //
 DELIMITER ;
++--------+-------------+-----------+-----------------------+---------------+
+| reg_no | course_code | type      | Attendance_percentage | Eligibity     |
++--------+-------------+-----------+-----------------------+---------------+
+| TG1010 | ENG1222     | Theory    |               86.6667 | Eligibity     |
+| TG1011 | ENG1222     | Theory    |               93.3333 | Eligibity     |
+| TG1012 | ENG1222     | Theory    |               73.3333 | NOT Eligibity |
+| TG1013 | ENG1222     | Theory    |               73.3333 | NOT Eligibity |
+| TG1014 | ENG1222     | Theory    |               80.0000 | Eligibity     |
+| TG1015 | ENG1222     | Theory    |               80.0000 | Eligibity     |
+| TG1016 | ENG1222     | Theory    |              100.0000 | Eligibity     |
+| TG1017 | ENG1222     | Theory    |               80.0000 | Eligibity     |
+| TG1018 | ENG1222     | Theory    |               80.0000 | Eligibity     |
+| TG1019 | ENG1222     | Theory    |               80.0000 | Eligibity     |
+| TG1010 | ICT1212     | Theory    |               86.6667 | Eligibity     |
+| TG1011 | ICT1212     | Theory    |               80.0000 | Eligibity     |
+| TG1012 | ICT1212     | Theory    |              100.0000 | Eligibity     |
+| TG1013 | ICT1212     | Theory    |               73.3333 | NOT Eligibity |
+| TG1014 | ICT1212     | Theory    |              100.0000 | Eligibity     |
+| TG1015 | ICT1212     | Theory    |               73.3333 | NOT Eligibity |
+| TG1016 | ICT1212     | Theory    |               80.0000 | Eligibity     |
+| TG1017 | ICT1212     | Theory    |              100.0000 | Eligibity     |
+| TG1018 | ICT1212     | Theory    |               73.3333 | NOT Eligibity |
+| TG1019 | ICT1212     | Theory    |              100.0000 | Eligibity     |
+| TG1010 | ICT1222     | Practical |               86.6667 | Eligibity     |
+| TG1011 | ICT1222     | Practical |               80.0000 | Eligibity     |
+| TG1012 | ICT1222     | Practical |               73.3333 | NOT Eligibity |
+| TG1013 | ICT1222     | Practical |               66.6667 | NOT Eligibity |
+| TG1014 | ICT1222     | Practical |               60.0000 | NOT Eligibity |
+| TG1015 | ICT1222     | Practical |               86.6667 | Eligibity     |
+| TG1016 | ICT1222     | Practical |               80.0000 | Eligibity     |
+| TG1017 | ICT1222     | Practical |               86.6667 | Eligibity     |
+| TG1018 | ICT1222     | Practical |               66.6667 | NOT Eligibity |
+| TG1019 | ICT1222     | Practical |               60.0000 | NOT Eligibity |
+| TG1010 | ICT1233     | Theory    |               93.3333 | Eligibity     |
+| TG1010 | ICT1233     | Practical |               86.6667 | Eligibity     |
+| TG1011 | ICT1233     | Theory    |               93.3333 | Eligibity     |
+| TG1011 | ICT1233     | Practical |               80.0000 | Eligibity     |
+| TG1012 | ICT1233     | Theory    |               73.3333 | NOT Eligibity |
+| TG1012 | ICT1233     | Practical |               93.3333 | Eligibity     |
+| TG1013 | ICT1233     | Theory    |               66.6667 | NOT Eligibity |
+| TG1013 | ICT1233     | Practical |               86.6667 | Eligibity     |
+| TG1014 | ICT1233     | Theory    |               80.0000 | Eligibity     |
+| TG1014 | ICT1233     | Practical |               86.6667 | Eligibity     |
+| TG1015 | ICT1233     | Theory    |              100.0000 | Eligibity     |
+| TG1015 | ICT1233     | Practical |               93.3333 | Eligibity     |
+| TG1016 | ICT1233     | Theory    |               93.3333 | Eligibity     |
+| TG1016 | ICT1233     | Practical |               93.3333 | Eligibity     |
+| TG1017 | ICT1233     | Theory    |               66.6667 | NOT Eligibity |
+| TG1017 | ICT1233     | Practical |               86.6667 | Eligibity     |
+| TG1018 | ICT1233     | Theory    |               53.3333 | NOT Eligibity |
+| TG1018 | ICT1233     | Practical |               86.6667 | Eligibity     |
+| TG1019 | ICT1233     | Theory    |               73.3333 | NOT Eligibity |
+| TG1019 | ICT1233     | Practical |               66.6667 | NOT Eligibity |
+| TG1010 | ICT1242     | Theory    |               80.0000 | Eligibity     |
+| TG1011 | ICT1242     | Theory    |               80.0000 | Eligibity     |
+| TG1012 | ICT1242     | Theory    |               93.3333 | Eligibity     |
+| TG1013 | ICT1242     | Theory    |               93.3333 | Eligibity     |
+| TG1014 | ICT1242     | Theory    |               93.3333 | Eligibity     |
+| TG1015 | ICT1242     | Theory    |               86.6667 | Eligibity     |
+| TG1016 | ICT1242     | Theory    |               80.0000 | Eligibity     |
+| TG1017 | ICT1242     | Theory    |               86.6667 | Eligibity     |
+| TG1018 | ICT1242     | Theory    |               93.3333 | Eligibity     |
+| TG1019 | ICT1242     | Theory    |               86.6667 | Eligibity     |
+| TG1010 | ICT1253     | Theory    |               86.6667 | Eligibity     |
+| TG1010 | ICT1253     | Practical |               86.6667 | Eligibity     |
+| TG1011 | ICT1253     | Theory    |               80.0000 | Eligibity     |
+| TG1011 | ICT1253     | Practical |               93.3333 | Eligibity     |
+| TG1012 | ICT1253     | Theory    |              100.0000 | Eligibity     |
+| TG1012 | ICT1253     | Practical |              100.0000 | Eligibity     |
+| TG1013 | ICT1253     | Theory    |               86.6667 | Eligibity     |
+| TG1013 | ICT1253     | Practical |               93.3333 | Eligibity     |
+| TG1014 | ICT1253     | Theory    |               93.3333 | Eligibity     |
+| TG1014 | ICT1253     | Practical |              100.0000 | Eligibity     |
+| TG1015 | ICT1253     | Theory    |               86.6667 | Eligibity     |
+| TG1015 | ICT1253     | Practical |               86.6667 | Eligibity     |
+| TG1016 | ICT1253     | Theory    |               80.0000 | Eligibity     |
+| TG1016 | ICT1253     | Practical |               93.3333 | Eligibity     |
+| TG1017 | ICT1253     | Theory    |               73.3333 | NOT Eligibity |
+| TG1017 | ICT1253     | Practical |               73.3333 | NOT Eligibity |
+| TG1018 | ICT1253     | Theory    |               73.3333 | NOT Eligibity |
+| TG1018 | ICT1253     | Practical |               93.3333 | Eligibity     |
+| TG1019 | ICT1253     | Theory    |               66.6667 | NOT Eligibity |
+| TG1019 | ICT1253     | Practical |               80.0000 | Eligibity     |
+| TG1010 | TCS1212     | Theory    |               86.6667 | Eligibity     |
+| TG1011 | TCS1212     | Theory    |              100.0000 | Eligibity     |
+| TG1012 | TCS1212     | Theory    |               73.3333 | NOT Eligibity |
+| TG1013 | TCS1212     | Theory    |               80.0000 | Eligibity     |
+| TG1014 | TCS1212     | Theory    |               80.0000 | Eligibity     |
+| TG1015 | TCS1212     | Theory    |               86.6667 | Eligibity     |
+| TG1016 | TCS1212     | Theory    |              100.0000 | Eligibity     |
+| TG1017 | TCS1212     | Theory    |               73.3333 | NOT Eligibity |
+| TG1018 | TCS1212     | Theory    |               73.3333 | NOT Eligibity |
+| TG1019 | TCS1212     | Theory    |               80.0000 | Eligibity     |
++--------+-------------+-----------+-----------------------+---------------+
 
 3. as individuals by giving the registration number
 
@@ -109,7 +431,7 @@ DELIMITER //
 CREATE PROCEDURE GetSummaryofAttendanceGivingRegistrationNumber(IN regno CHAR(6))
 BEGIN
      SELECT A.reg_no,c.course_code,A.type,
-    (SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/c.lecture_hours) AS Attendance_percentage,
+    (SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/c.lecture_hours)*100 AS Attendance_percentage,
     CASE WHEN(SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/(c.lecture_hours))*100 >= 80.00 THEN 'Eligibity' ELSE 'NOT Eligibity' END AS Eligibity 
     FROM attendance A
     JOIN course_unit c ON A.course_code = c.course_code
@@ -119,6 +441,20 @@ BEGIN
 END;
 //
 DELIMITER ;
++--------+-------------+-----------+-----------------------+-----------+
+| reg_no | course_code | type      | Attendance_percentage | Eligibity |
++--------+-------------+-----------+-----------------------+-----------+
+| TG1010 | ICT1212     | Theory    |               80.0000 | Eligibity |
+| TG1010 | ICT1222     | Practical |               80.0000 | Eligibity |
+| TG1010 | ICT1253     | Theory    |               86.6667 | Eligibity |
+| TG1010 | ICT1253     | Practical |               80.0000 | Eligibity |
+| TG1010 | ICT1242     | Theory    |               80.0000 | Eligibity |
+| TG1010 | TCS1212     | Theory    |               80.0000 | Eligibity |
+| TG1010 | ICT1233     | Theory    |               86.6667 | Eligibity |
+| TG1010 | ICT1233     | Practical |               86.6667 | Eligibity |
+| TG1010 | ENG1222     | Theory    |               86.6667 | Eligibity |
++--------+-------------+-----------+-----------------------+-----------+
+9 rows in set (0.00 sec)
 
 4.as individuals by giving the registration no and course code-----------------------------------------------------
 
@@ -137,8 +473,14 @@ BEGIN
 END;
 //
 DELIMITER;
++--------+-------------+--------+-----------------------+-----------+
+| reg_no | course_code | type   | Attendance_percentage | Eligibity |
++--------+-------------+--------+-----------------------+-----------+
+| TG1010 | ICT1212     | Theory |               80.0000 | Eligibity |
++--------+-------------+--------+-----------------------+-----------+
+1 row in set (0.00 sec)
 
-For the whole batch for all the subjects with percentage and eligibilty-----------------------------------------------
+5. For the whole batch for all the subjects with percentage and eligibilty-----------------------------------------------
 
 DELIMITER //
 CREATE PROCEDURE GetAttendanceForWholeBatch()
@@ -153,8 +495,103 @@ BEGIN
 END;
 //
 DELIMITER ;
++--------+-------------+-----------+-----------------------+---------------+
+| reg_no | course_code | type      | Attendance_percentage | Eligibity     |
++--------+-------------+-----------+-----------------------+---------------+
+| TG1010 | ENG1222     | Theory    |               86.6667 | Eligibity     |
+| TG1011 | ENG1222     | Theory    |               93.3333 | Eligibity     |
+| TG1012 | ENG1222     | Theory    |               73.3333 | NOT Eligibity |
+| TG1013 | ENG1222     | Theory    |               66.6667 | NOT Eligibity |
+| TG1014 | ENG1222     | Theory    |               66.6667 | NOT Eligibity |
+| TG1015 | ENG1222     | Theory    |               80.0000 | Eligibity     |
+| TG1016 | ENG1222     | Theory    |              100.0000 | Eligibity     |
+| TG1017 | ENG1222     | Theory    |               80.0000 | Eligibity     |
+| TG1018 | ENG1222     | Theory    |               66.6667 | NOT Eligibity |
+| TG1019 | ENG1222     | Theory    |               60.0000 | NOT Eligibity |
+| TG1010 | ICT1212     | Theory    |               80.0000 | Eligibity     |
+| TG1011 | ICT1212     | Theory    |               73.3333 | NOT Eligibity |
+| TG1012 | ICT1212     | Theory    |               93.3333 | Eligibity     |
+| TG1013 | ICT1212     | Theory    |               66.6667 | NOT Eligibity |
+| TG1014 | ICT1212     | Theory    |               86.6667 | Eligibity     |
+| TG1015 | ICT1212     | Theory    |               66.6667 | NOT Eligibity |
+| TG1016 | ICT1212     | Theory    |               73.3333 | NOT Eligibity |
+| TG1017 | ICT1212     | Theory    |               86.6667 | Eligibity     |
+| TG1018 | ICT1212     | Theory    |               66.6667 | NOT Eligibity |
+| TG1019 | ICT1212     | Theory    |               93.3333 | Eligibity     |
+| TG1010 | ICT1222     | Practical |               80.0000 | Eligibity     |
+| TG1011 | ICT1222     | Practical |               73.3333 | NOT Eligibity |
+| TG1012 | ICT1222     | Practical |               66.6667 | NOT Eligibity |
+| TG1013 | ICT1222     | Practical |               60.0000 | NOT Eligibity |
+| TG1014 | ICT1222     | Practical |               60.0000 | NOT Eligibity |
+| TG1015 | ICT1222     | Practical |               73.3333 | NOT Eligibity |
+| TG1016 | ICT1222     | Practical |               73.3333 | NOT Eligibity |
+| TG1017 | ICT1222     | Practical |               66.6667 | NOT Eligibity |
+| TG1018 | ICT1222     | Practical |               60.0000 | NOT Eligibity |
+| TG1019 | ICT1222     | Practical |               60.0000 | NOT Eligibity |
+| TG1010 | ICT1233     | Theory    |               86.6667 | Eligibity     |
+| TG1010 | ICT1233     | Practical |               86.6667 | Eligibity     |
+| TG1011 | ICT1233     | Theory    |               86.6667 | Eligibity     |
+| TG1011 | ICT1233     | Practical |               80.0000 | Eligibity     |
+| TG1012 | ICT1233     | Theory    |               66.6667 | NOT Eligibity |
+| TG1012 | ICT1233     | Practical |               86.6667 | Eligibity     |
+| TG1013 | ICT1233     | Theory    |               53.3333 | NOT Eligibity |
+| TG1013 | ICT1233     | Practical |               73.3333 | NOT Eligibity |
+| TG1014 | ICT1233     | Theory    |               73.3333 | NOT Eligibity |
+| TG1014 | ICT1233     | Practical |               80.0000 | Eligibity     |
+| TG1015 | ICT1233     | Theory    |               93.3333 | Eligibity     |
+| TG1015 | ICT1233     | Practical |               86.6667 | Eligibity     |
+| TG1016 | ICT1233     | Theory    |               86.6667 | Eligibity     |
+| TG1016 | ICT1233     | Practical |               86.6667 | Eligibity     |
+| TG1017 | ICT1233     | Theory    |               60.0000 | NOT Eligibity |
+| TG1017 | ICT1233     | Practical |               80.0000 | Eligibity     |
+| TG1018 | ICT1233     | Theory    |               46.6667 | NOT Eligibity |
+| TG1018 | ICT1233     | Practical |               73.3333 | NOT Eligibity |
+| TG1019 | ICT1233     | Theory    |               66.6667 | NOT Eligibity |
+| TG1019 | ICT1233     | Practical |               60.0000 | NOT Eligibity |
+| TG1010 | ICT1242     | Theory    |               80.0000 | Eligibity     |
+| TG1011 | ICT1242     | Theory    |               80.0000 | Eligibity     |
+| TG1012 | ICT1242     | Theory    |               86.6667 | Eligibity     |
+| TG1013 | ICT1242     | Theory    |               93.3333 | Eligibity     |
+| TG1014 | ICT1242     | Theory    |               86.6667 | Eligibity     |
+| TG1015 | ICT1242     | Theory    |               86.6667 | Eligibity     |
+| TG1016 | ICT1242     | Theory    |               80.0000 | Eligibity     |
+| TG1017 | ICT1242     | Theory    |               80.0000 | Eligibity     |
+| TG1018 | ICT1242     | Theory    |               93.3333 | Eligibity     |
+| TG1019 | ICT1242     | Theory    |               80.0000 | Eligibity     |
+| TG1010 | ICT1253     | Theory    |               86.6667 | Eligibity     |
+| TG1010 | ICT1253     | Practical |               80.0000 | Eligibity     |
+| TG1011 | ICT1253     | Theory    |               80.0000 | Eligibity     |
+| TG1011 | ICT1253     | Practical |               93.3333 | Eligibity     |
+| TG1012 | ICT1253     | Theory    |              100.0000 | Eligibity     |
+| TG1012 | ICT1253     | Practical |               93.3333 | Eligibity     |
+| TG1013 | ICT1253     | Theory    |               86.6667 | Eligibity     |
+| TG1013 | ICT1253     | Practical |               86.6667 | Eligibity     |
+| TG1014 | ICT1253     | Theory    |               93.3333 | Eligibity     |
+| TG1014 | ICT1253     | Practical |               93.3333 | Eligibity     |
+| TG1015 | ICT1253     | Theory    |               80.0000 | Eligibity     |
+| TG1015 | ICT1253     | Practical |               80.0000 | Eligibity     |
+| TG1016 | ICT1253     | Theory    |               80.0000 | Eligibity     |
+| TG1016 | ICT1253     | Practical |               93.3333 | Eligibity     |
+| TG1017 | ICT1253     | Theory    |               66.6667 | NOT Eligibity |
+| TG1017 | ICT1253     | Practical |               66.6667 | NOT Eligibity |
+| TG1018 | ICT1253     | Theory    |               66.6667 | NOT Eligibity |
+| TG1018 | ICT1253     | Practical |               86.6667 | Eligibity     |
+| TG1019 | ICT1253     | Theory    |               66.6667 | NOT Eligibity |
+| TG1019 | ICT1253     | Practical |               73.3333 | NOT Eligibity |
+| TG1010 | TCS1212     | Theory    |               80.0000 | Eligibity     |
+| TG1011 | TCS1212     | Theory    |              100.0000 | Eligibity     |
+| TG1012 | TCS1212     | Theory    |               66.6667 | NOT Eligibity |
+| TG1013 | TCS1212     | Theory    |               66.6667 | NOT Eligibity |
+| TG1014 | TCS1212     | Theory    |               66.6667 | NOT Eligibity |
+| TG1015 | TCS1212     | Theory    |               73.3333 | NOT Eligibity |
+| TG1016 | TCS1212     | Theory    |              100.0000 | Eligibity     |
+| TG1017 | TCS1212     | Theory    |               66.6667 | NOT Eligibity |
+| TG1018 | TCS1212     | Theory    |               53.3333 | NOT Eligibity |
+| TG1019 | TCS1212     | Theory    |               73.3333 | NOT Eligibity |
++--------+-------------+-----------+-----------------------+---------------+
+90 rows in set (0.00 sec)
 
---To Get Attendance Percentage and Eligibility When a subject has theory and practical as separate to each other
+6. To Get Attendance Percentage and Eligibility When a subject has theory and practical as separate to each other
 
 DELIMITER //
 CREATE PROCEDURE Get_Att_Elig_For_Sub_Theo_OR_Prac_Each(IN regno CHAR(6), ccode CHAR(7), t VARCHAR(25))
@@ -177,7 +614,14 @@ END;
 //
 DELIMITER ;
 
---To Get Attendance Percentage and Eligibility When a subject has theory and practical as combined to each other
++--------+-------------+--------+-----------------------+-------------+
+| reg_no | course_code | type   | Attendance_percentage | Eligibility |
++--------+-------------+--------+-----------------------+-------------+
+| TG1010 | ICT1253     | Theory |               86.6667 | Eligibility |
++--------+-------------+--------+-----------------------+-------------+
+1 row in set (0.00 sec)
+
+7. To Get Attendance Percentage and Eligibility When a subject has theory and practical as combined to each other
 
 
 DELIMITER //
@@ -199,7 +643,14 @@ END;
 //
 DELIMITER ; 
 
---To get the attendance percentage When a subject has thoery and practical as separate to each other
++--------+-------------+-----------------------+-------------+
+| reg_no | course_code | Attendance_percentage | Eligibility |
++--------+-------------+-----------------------+-------------+
+| TG1010 | ICT1253     |               83.3333 | Eligibility |
++--------+-------------+-----------------------+-------------+
+1 row in set (0.00 sec)
+
+8. To get the attendance percentage When a subject has thoery and practical as separate to each other
 
 DELIMITER //
 CREATE PROCEDURE Get_Att_For_Sub_Theo_OR_Prac_Each(IN regno CHAR(6), ccode CHAR(7), t VARCHAR(25))
@@ -218,8 +669,14 @@ BEGIN
 END;
 //
 DELIMITER ;
++--------+-------------+--------+-----------------------+
+| reg_no | course_code | type   | Attendance_percentage |
++--------+-------------+--------+-----------------------+
+| TG1010 | ICT1253     | Theory |               86.6667 |
++--------+-------------+--------+-----------------------+
+1 row in set (0.00 sec)
 
---To get the attendance percentage When a subject has thoery and practical as combined to each other
+9. To get the attendance percentage When a subject has thoery and practical as combined to each other
 
 DELIMITER //
  CREATE PROCEDURE Get_Att_For_Sub_Theo_And_Prac_Each(IN regno CHAR(6), ccode CHAR(7))
@@ -240,7 +697,14 @@ END;
 //
 DELIMITER ;
 
---To get the attendance percentage and eligibity When a subject has thoery and practical as separate to each other(with medicals)
++--------+-------------+-----------------------+-------------+
+| reg_no | course_code | Attendance_percentage | Eligibility |
++--------+-------------+-----------------------+-------------+
+| TG1010 | ICT1253     |               83.3333 | Eligibility |
++--------+-------------+-----------------------+-------------+
+1 row in set (0.00 sec)
+
+10. To get the attendance percentage and eligibity When a subject has thoery and practical as separate to each other(with medicals)
 
 DELIMITER //
 CREATE PROCEDURE Get_Att_Elig_For_Sub_Theo_OR_Prac_Each_Medic(IN regno CHAR(6), ccode CHAR(7), t VARCHAR(25))
@@ -263,7 +727,14 @@ END;
 //
 DELIMITER ;
 
---To get the attendance percentage and eligibity When a subject has thoery and practical as combined to each other(with medicals)
++--------+-------------+--------+-----------------------+-------------+
+| reg_no | course_code | type   | Attendance_percentage | Eligibility |
++--------+-------------+--------+-----------------------+-------------+
+| TG1010 | ICT1253     | Theory |               86.6667 | Eligibility |
++--------+-------------+--------+-----------------------+-------------+
+1 row in set (0.00 sec)
+
+11. To get the attendance percentage and eligibity When a subject has thoery and practical as combined to each other(with medicals)
 
 DELIMITER //
  CREATE PROCEDURE Get_Att_Elig_For_Sub_Theo_And_Prac_Each_Medic(IN regno CHAR(6), ccode CHAR(7))
@@ -283,8 +754,15 @@ DELIMITER //
 END;
 //
 DELIMITER ; 
++--------+-------------+-----------------------+-------------+
+| reg_no | course_code | Attendance_percentage | Eligibility |
++--------+-------------+-----------------------+-------------+
+| TG1010 | ICT1253     |               86.6667 | Eligibility |
++--------+-------------+-----------------------+-------------+
+1 row in set (0.00 sec)
 
---To get the attendance percentage When a subject has thoery and practical as separate to each other(with medicals)
+
+12. To get the attendance percentage When a subject has thoery and practical as separate to each other(with medicals)
 
 
 DELIMITER //
@@ -305,7 +783,13 @@ END;
 //
 DELIMITER ;
 
---To get the attendance percentage When a subject has thoery and practical as combined to each other(with medicals)
++--------+-------------+--------+-----------------------+
+| reg_no | course_code | type   | Attendance_percentage |
++--------+-------------+--------+-----------------------+
+| TG1010 | ICT1253     | Theory |               86.6667 |
++--------+-------------+--------+-----------------------+
+1 row in set (0.00 sec)
+13. To get the attendance percentage When a subject has thoery and practical as combined to each other(with medicals)
 
 DELIMITER //
 CREATE PROCEDURE Get_Att_For_Sub_Theo_And_Prac_Each_Medic(IN regno CHAR(6), ccode CHAR(7), t VARCHAR(25))
@@ -325,7 +809,7 @@ END;
 //
 DELIMITER ;
 
---To get attendance percentage and eligibility for when a subject has theory and practical for each subject as separate 
+14. To get attendance percentage and eligibility for when a subject has theory and practical for each subject as separate 
 
 DELIMITER // 
 CREATE PROCEDURE Get_att_Elig_For_Theo_Or_Prac_Sub(ccode CHAR(7),t VARCHAR(25))
@@ -347,7 +831,24 @@ END;
 //
 DELIMITER ;
 
---To get attendance percentage and eligibility for when a subject has theory and practical for each subject as combined
++--------+-------------+--------+-----------------------+-----------------+
+| reg_no | course_code | type   | Attendance_percentage | Eligibility     |
++--------+-------------+--------+-----------------------+-----------------+
+| TG1010 | ICT1253     | Theory |               86.6667 | Eligibility     |
+| TG1011 | ICT1253     | Theory |               80.0000 | Eligibility     |
+| TG1012 | ICT1253     | Theory |              100.0000 | Eligibility     |
+| TG1013 | ICT1253     | Theory |               86.6667 | Eligibility     |
+| TG1014 | ICT1253     | Theory |               93.3333 | Eligibility     |
+| TG1015 | ICT1253     | Theory |               80.0000 | Eligibility     |
+| TG1016 | ICT1253     | Theory |               80.0000 | Eligibility     |
+| TG1017 | ICT1253     | Theory |               66.6667 | NOT Eligibility |
+| TG1018 | ICT1253     | Theory |               66.6667 | NOT Eligibility |
+| TG1019 | ICT1253     | Theory |               66.6667 | NOT Eligibility |
++--------+-------------+--------+-----------------------+-----------------+
+10 rows in set (0.00 sec)
+
+
+15. To get attendance percentage and eligibility for when a subject has theory and practical for each subject as combined
 
 DELIMITER // 
 CREATE PROCEDURE Get_att_Elig_For_Theo_And_Prac_Sub(ccode CHAR(7))
@@ -367,7 +868,23 @@ END;
 //
 DELIMITER ;
 
---`To get attendance percentage and eligibity for when a subject has theory and practical for each subject as separate(with medicals)
++--------+-------------+-----------------------+-----------------+
+| reg_no | course_code | Attendance_percentage | Eligibility     |
++--------+-------------+-----------------------+-----------------+
+| TG1010 | ICT1253     |               83.3333 | Eligibility     |
+| TG1011 | ICT1253     |               86.6667 | Eligibility     |
+| TG1012 | ICT1253     |               96.6667 | Eligibility     |
+| TG1013 | ICT1253     |               86.6667 | Eligibility     |
+| TG1014 | ICT1253     |               93.3333 | Eligibility     |
+| TG1015 | ICT1253     |               80.0000 | Eligibility     |
+| TG1016 | ICT1253     |               86.6667 | Eligibility     |
+| TG1017 | ICT1253     |               66.6667 | NOT Eligibility |
+| TG1018 | ICT1253     |               76.6667 | NOT Eligibility |
+| TG1019 | ICT1253     |               70.0000 | NOT Eligibility |
++--------+-------------+-----------------------+-----------------+
+10 rows in set (0.00 sec)
+
+16.`To get attendance percentage and eligibity for when a subject has theory and practical for each subject as separate(with medicals)
 
 DELIMITER // 
 CREATE PROCEDURE Get_att_Elig_For_Theo_Or_Prac_Sub_Medic(ccode CHAR(7),t VARCHAR(25))
@@ -389,7 +906,23 @@ END;
 //
 DELIMITER ;
 
---To get attendance percentage and eligibility for when a subject has theory and practical for each subject as combined(with medicals)
++--------+-------------+--------+-----------------------+-----------------+
+| reg_no | course_code | type   | Attendance_percentage | Eligibility     |
++--------+-------------+--------+-----------------------+-----------------+
+| TG1010 | ICT1253     | Theory |               86.6667 | Eligibility     |
+| TG1011 | ICT1253     | Theory |               80.0000 | Eligibility     |
+| TG1012 | ICT1253     | Theory |              100.0000 | Eligibility     |
+| TG1013 | ICT1253     | Theory |               86.6667 | Eligibility     |
+| TG1014 | ICT1253     | Theory |               93.3333 | Eligibility     |
+| TG1015 | ICT1253     | Theory |               86.6667 | Eligibility     |
+| TG1016 | ICT1253     | Theory |               80.0000 | Eligibility     |
+| TG1017 | ICT1253     | Theory |               73.3333 | NOT Eligibility |
+| TG1018 | ICT1253     | Theory |               73.3333 | NOT Eligibility |
+| TG1019 | ICT1253     | Theory |               66.6667 | NOT Eligibility |
++--------+-------------+--------+-----------------------+-----------------+
+10 rows in set (0.00 sec)
+
+17. To get attendance percentage and eligibility for when a subject has theory and practical for each subject as combined(with medicals)
 
 DELIMITER // 
 CREATE PROCEDURE Get_att_Elig_For_Theo_And_Prac_Sub_Medic(ccode CHAR(7))
@@ -409,6 +942,22 @@ END;
 //
 DELIMITER ;
 
++--------+-------------+-----------------------+-----------------+
+| reg_no | course_code | Attendance_percentage | Eligibility     |
++--------+-------------+-----------------------+-----------------+
+| TG1010 | ICT1253     |               83.3333 | Eligibility     |
+| TG1011 | ICT1253     |               86.6667 | Eligibility     |
+| TG1012 | ICT1253     |               96.6667 | Eligibility     |
+| TG1013 | ICT1253     |               86.6667 | Eligibility     |
+| TG1014 | ICT1253     |               93.3333 | Eligibility     |
+| TG1015 | ICT1253     |               80.0000 | Eligibility     |
+| TG1016 | ICT1253     |               86.6667 | Eligibility     |
+| TG1017 | ICT1253     |               66.6667 | NOT Eligibility |
+| TG1018 | ICT1253     |               76.6667 | NOT Eligibility |
+| TG1019 | ICT1253     |               70.0000 | NOT Eligibility |
++--------+-------------+-----------------------+-----------------+
+10 rows in set (0.00 sec)
+
 A view to see attendance percentage of students
 
 CREATE VIEW student_attendance_percentage AS
@@ -417,6 +966,102 @@ SELECT A.reg_no, A.course_code,A.type,
 FROM attendance A
 JOIN course_unit c ON A.course_code = c.course_code
 GROUP BY A.reg_no, A.course_code,A.type;
+
++--------+-------------+-----------+-----------------------+
+| reg_no | course_code | type      | attendance_percentage |
++--------+-------------+-----------+-----------------------+
+| TG1010 | ENG1222     | Theory    |               86.6667 |
+| TG1011 | ENG1222     | Theory    |               93.3333 |
+| TG1012 | ENG1222     | Theory    |               73.3333 |
+| TG1013 | ENG1222     | Theory    |               66.6667 |
+| TG1014 | ENG1222     | Theory    |               66.6667 |
+| TG1015 | ENG1222     | Theory    |               80.0000 |
+| TG1016 | ENG1222     | Theory    |              100.0000 |
+| TG1017 | ENG1222     | Theory    |               80.0000 |
+| TG1018 | ENG1222     | Theory    |               66.6667 |
+| TG1019 | ENG1222     | Theory    |               60.0000 |
+| TG1010 | ICT1212     | Theory    |               80.0000 |
+| TG1011 | ICT1212     | Theory    |               73.3333 |
+| TG1012 | ICT1212     | Theory    |               93.3333 |
+| TG1013 | ICT1212     | Theory    |               66.6667 |
+| TG1014 | ICT1212     | Theory    |               86.6667 |
+| TG1015 | ICT1212     | Theory    |               66.6667 |
+| TG1016 | ICT1212     | Theory    |               73.3333 |
+| TG1017 | ICT1212     | Theory    |               86.6667 |
+| TG1018 | ICT1212     | Theory    |               66.6667 |
+| TG1019 | ICT1212     | Theory    |               93.3333 |
+| TG1010 | ICT1222     | Practical |               80.0000 |
+| TG1011 | ICT1222     | Practical |               73.3333 |
+| TG1012 | ICT1222     | Practical |               66.6667 |
+| TG1013 | ICT1222     | Practical |               60.0000 |
+| TG1014 | ICT1222     | Practical |               60.0000 |
+| TG1015 | ICT1222     | Practical |               73.3333 |
+| TG1016 | ICT1222     | Practical |               73.3333 |
+| TG1017 | ICT1222     | Practical |               66.6667 |
+| TG1018 | ICT1222     | Practical |               60.0000 |
+| TG1019 | ICT1222     | Practical |               60.0000 |
+| TG1010 | ICT1233     | Theory    |               86.6667 |
+| TG1010 | ICT1233     | Practical |               86.6667 |
+| TG1011 | ICT1233     | Theory    |               86.6667 |
+| TG1011 | ICT1233     | Practical |               80.0000 |
+| TG1012 | ICT1233     | Theory    |               66.6667 |
+| TG1012 | ICT1233     | Practical |               86.6667 |
+| TG1013 | ICT1233     | Theory    |               53.3333 |
+| TG1013 | ICT1233     | Practical |               73.3333 |
+| TG1014 | ICT1233     | Theory    |               73.3333 |
+| TG1014 | ICT1233     | Practical |               80.0000 |
+| TG1015 | ICT1233     | Theory    |               93.3333 |
+| TG1015 | ICT1233     | Practical |               86.6667 |
+| TG1016 | ICT1233     | Theory    |               86.6667 |
+| TG1016 | ICT1233     | Practical |               86.6667 |
+| TG1017 | ICT1233     | Theory    |               60.0000 |
+| TG1017 | ICT1233     | Practical |               80.0000 |
+| TG1018 | ICT1233     | Theory    |               46.6667 |
+| TG1018 | ICT1233     | Practical |               73.3333 |
+| TG1019 | ICT1233     | Theory    |               66.6667 |
+| TG1019 | ICT1233     | Practical |               60.0000 |
+| TG1010 | ICT1242     | Theory    |               80.0000 |
+| TG1011 | ICT1242     | Theory    |               80.0000 |
+| TG1012 | ICT1242     | Theory    |               86.6667 |
+| TG1013 | ICT1242     | Theory    |               93.3333 |
+| TG1014 | ICT1242     | Theory    |               86.6667 |
+| TG1015 | ICT1242     | Theory    |               86.6667 |
+| TG1016 | ICT1242     | Theory    |               80.0000 |
+| TG1017 | ICT1242     | Theory    |               80.0000 |
+| TG1018 | ICT1242     | Theory    |               93.3333 |
+| TG1019 | ICT1242     | Theory    |               80.0000 |
+| TG1010 | ICT1253     | Theory    |               86.6667 |
+| TG1010 | ICT1253     | Practical |               80.0000 |
+| TG1011 | ICT1253     | Theory    |               80.0000 |
+| TG1011 | ICT1253     | Practical |               93.3333 |
+| TG1012 | ICT1253     | Theory    |              100.0000 |
+| TG1012 | ICT1253     | Practical |               93.3333 |
+| TG1013 | ICT1253     | Theory    |               86.6667 |
+| TG1013 | ICT1253     | Practical |               86.6667 |
+| TG1014 | ICT1253     | Theory    |               93.3333 |
+| TG1014 | ICT1253     | Practical |               93.3333 |
+| TG1015 | ICT1253     | Theory    |               80.0000 |
+| TG1015 | ICT1253     | Practical |               80.0000 |
+| TG1016 | ICT1253     | Theory    |               80.0000 |
+| TG1016 | ICT1253     | Practical |               93.3333 |
+| TG1017 | ICT1253     | Theory    |               66.6667 |
+| TG1017 | ICT1253     | Practical |               66.6667 |
+| TG1018 | ICT1253     | Theory    |               66.6667 |
+| TG1018 | ICT1253     | Practical |               86.6667 |
+| TG1019 | ICT1253     | Theory    |               66.6667 |
+| TG1019 | ICT1253     | Practical |               73.3333 |
+| TG1010 | TCS1212     | Theory    |               80.0000 |
+| TG1011 | TCS1212     | Theory    |              100.0000 |
+| TG1012 | TCS1212     | Theory    |               66.6667 |
+| TG1013 | TCS1212     | Theory    |               66.6667 |
+| TG1014 | TCS1212     | Theory    |               66.6667 |
+| TG1015 | TCS1212     | Theory    |               73.3333 |
+| TG1016 | TCS1212     | Theory    |              100.0000 |
+| TG1017 | TCS1212     | Theory    |               66.6667 |
+| TG1018 | TCS1212     | Theory    |               53.3333 |
+| TG1019 | TCS1212     | Theory    |               73.3333 |
++--------+-------------+-----------+-----------------------+
+90 rows in set (0.00 sec)
 
 ///////////////////////////////////////////////////////////Attendance DATA//////////////////////////////////////////////////////////////////////////////
 

@@ -127,17 +127,55 @@ Creating user student and granting privileges
 
 CREATE USER 'Student'@'localhost' IDENTIFIED BY 'student1234';
 
-GRANT SELECT,SHOW VIEW ON LMS.* TO 'Student'@'localhost';
+GRANT SELECT,SHOW VIEW ON LMS.tot_quiz_marks TO 'Student'@'localhost';
+GRANT SELECT,SHOW VIEW  ON LMS.student_attendance_percentage TO 'Student'@'localhost';
+GRANT SELECT,SHOW VIEW  ON LMS.tot_assessment_marks TO 'Student'@'localhost';
+GRANT SELECT,SHOW VIEW  ON LMS.ca_marks_v TO 'Student'@'localhost';
+GRANT SELECT,SHOW VIEW  ON LMS.ca_pass_status TO 'Student'@'localhost';
+GRANT SELECT,SHOW VIEW ON LMS.final_exam_result TO 'Student'@'localhost';
+
+
+GRANT EXECUTE ON PROCEDURE LMS.GetCAMarksSummaryGivingcourse_code TO 'Student'@'localhost';
+GRANT EXECUTE ON PROCEDURE LMS.GetCAMarksSummaryGivingcourse_codewithReg_no TO 'Student'@'localhost';
+GRANT EXECUTE ON PROCEDURE LMS.GetCAMarksSummaryByRegNo TO 'Student'@'localhost';
+GRANT EXECUTE ON PROCEDURE LMS.CheckBatchEligibility TO 'Student'@'localhost';
+GRANT EXECUTE ON PROCEDURE LMS.CheckStudentEligibility TO 'Student'@'localhost';
+GRANT EXECUTE ON PROCEDURE LMS.student_attendance_percentage TO 'Student'@'localhost';
+GRANT SELECT ON LMS.GetMarksForSubject TO 'Student'@'localhost';
+GRANT SELECT ON LMS.GetMarksForStudent TO 'Student'@'localhost';
+GRANT SELECT ON LMS.StudentGrades TO 'Student'@'localhost';
+GRANT SELECT ON LMS.GetStudentGradesByCourse TO 'Student'@'localhost';
+GRANT SELECT ON LMS.GetStudentGradesByRegNo TO 'Student'@'localhost';
+
+
 
 FLUSH PRIVILEGES;
 
 mysql> SHOW GRANTS FOR 'Student'@'localhost';
-+-------------------------------------------------------------+
-| Grants for Student@localhost                                |
-+-------------------------------------------------------------+
-| GRANT USAGE ON *.* TO `Student`@`localhost`                 |
-| GRANT SELECT, SHOW VIEW ON `lms`.* TO `Student`@`localhost` |
-+-------------------------------------------------------------+
++----------------------------------------------------------------------------------------------------------+
+| Grants for Student@localhost                                                                             |
++----------------------------------------------------------------------------------------------------------+
+| GRANT USAGE ON *.* TO `Student`@`localhost`                                                              |
+| GRANT SELECT, SHOW VIEW ON `lms`.`final_exam_result` TO `Student`@`localhost`                            |
+| GRANT SELECT, SHOW VIEW ON `lms`.`tot_assessment_marks` TO `Student`@`localhost`                         |
+| GRANT SELECT, SHOW VIEW ON `lms`.`ca_pass_status` TO `Student`@`localhost`                               |
+| GRANT SELECT, SHOW VIEW ON `lms`.`student_attendance_percentage` TO `Student`@`localhost`                |
+| GRANT SELECT, SHOW VIEW ON `lms`.`ca_marks_v` TO `Student`@`localhost`                                   |
+| GRANT SELECT, SHOW VIEW ON `lms`.`quiz_marks` TO `Student`@`localhost`                                   |
+| GRANT EXECUTE ON PROCEDURE `lms`.`getmarksforsubject` TO `Student`@`localhost`                           |
+| GRANT EXECUTE ON PROCEDURE `lms`.`getcamarkssummarybyregno` TO `Student`@`localhost`                     |
+| GRANT EXECUTE ON PROCEDURE `lms`.`checkbatcheligibility` TO `Student`@`localhost`                        |
+| GRANT EXECUTE ON PROCEDURE `lms`.`getmarksforstudent` TO `Student`@`localhost`                           |
+| GRANT EXECUTE ON PROCEDURE `lms`.`getstudentgradesbyregno` TO `Student`@`localhost`                      |
+| GRANT EXECUTE ON PROCEDURE `lms`.`getcamarkssummarygivingcourse_codewithreg_no` TO `Student`@`localhost` |
+| GRANT EXECUTE ON PROCEDURE `lms`.`student_attendance_percentage` TO `Student`@`localhost`                |
+| GRANT EXECUTE ON PROCEDURE `lms`.`getstudentgradesbycourse` TO `Student`@`localhost`                     |
+| GRANT EXECUTE ON PROCEDURE `lms`.`checkstudenteligibility` TO `Student`@`localhost`                      |
+| GRANT EXECUTE ON PROCEDURE `lms`.`getcamarkssummarygivingcourse_code` TO `Student`@`localhost`           |
+| GRANT EXECUTE ON PROCEDURE `lms`.`studentgrades` TO `Student`@`localhost`                                |
++----------------------------------------------------------------------------------------------------------+
+18 rows in set (0.000 sec)
+
 2 rows in set (0.00 sec)
 
 Read permission is allowed only for final attendance and final marks/Grades tables/views.
