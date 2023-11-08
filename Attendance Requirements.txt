@@ -138,7 +138,7 @@ END;
 //
 DELIMITER;
 
-For the whole batch for all the subjects with percentage and eligibilty-----------------------------------------------
+5. For the whole batch for all the subjects with percentage and eligibilty-----------------------------------------------
 
 DELIMITER //
 CREATE PROCEDURE GetAttendanceForWholeBatch()
@@ -154,7 +154,7 @@ END;
 //
 DELIMITER ;
 
---To Get Attendance Percentage and Eligibility When a subject has theory and practical as separate to each other
+6. To Get Attendance Percentage and Eligibility When a subject has theory and practical as separate to each other
 
 DELIMITER //
 CREATE PROCEDURE Get_Att_Elig_For_Sub_Theo_OR_Prac_Each(IN regno CHAR(6), ccode CHAR(7), t VARCHAR(25))
@@ -177,7 +177,7 @@ END;
 //
 DELIMITER ;
 
---To Get Attendance Percentage and Eligibility When a subject has theory and practical as combined to each other
+7. To Get Attendance Percentage and Eligibility When a subject has theory and practical as combined to each other
 
 
 DELIMITER //
@@ -199,7 +199,7 @@ END;
 //
 DELIMITER ; 
 
---To get the attendance percentage When a subject has thoery and practical as separate to each other
+8. To get the attendance percentage When a subject has thoery and practical as separate to each other
 
 DELIMITER //
 CREATE PROCEDURE Get_Att_For_Sub_Theo_OR_Prac_Each(IN regno CHAR(6), ccode CHAR(7), t VARCHAR(25))
@@ -219,7 +219,7 @@ END;
 //
 DELIMITER ;
 
---To get the attendance percentage When a subject has thoery and practical as combined to each other
+9. To get the attendance percentage When a subject has thoery and practical as combined to each other
 
 DELIMITER //
  CREATE PROCEDURE Get_Att_For_Sub_Theo_And_Prac_Each(IN regno CHAR(6), ccode CHAR(7))
@@ -240,7 +240,7 @@ END;
 //
 DELIMITER ;
 
---To get the attendance percentage and eligibity When a subject has thoery and practical as separate to each other(with medicals)
+10. To get the attendance percentage and eligibity When a subject has thoery and practical as separate to each other(with medicals)
 
 DELIMITER //
 CREATE PROCEDURE Get_Att_Elig_For_Sub_Theo_OR_Prac_Each_Medic(IN regno CHAR(6), ccode CHAR(7), t VARCHAR(25))
@@ -263,7 +263,7 @@ END;
 //
 DELIMITER ;
 
---To get the attendance percentage and eligibity When a subject has thoery and practical as combined to each other(with medicals)
+11. To get the attendance percentage and eligibity When a subject has thoery and practical as combined to each other(with medicals)
 
 DELIMITER //
  CREATE PROCEDURE Get_Att_Elig_For_Sub_Theo_And_Prac_Each_Medic(IN regno CHAR(6), ccode CHAR(7))
@@ -284,7 +284,7 @@ END;
 //
 DELIMITER ; 
 
---To get the attendance percentage When a subject has thoery and practical as separate to each other(with medicals)
+12. To get the attendance percentage When a subject has thoery and practical as separate to each other(with medicals)
 
 
 DELIMITER //
@@ -305,7 +305,7 @@ END;
 //
 DELIMITER ;
 
---To get the attendance percentage When a subject has thoery and practical as combined to each other(with medicals)
+13. To get the attendance percentage When a subject has thoery and practical as combined to each other(with medicals)
 
 DELIMITER //
 CREATE PROCEDURE Get_Att_For_Sub_Theo_And_Prac_Each_Medic(IN regno CHAR(6), ccode CHAR(7), t VARCHAR(25))
@@ -325,7 +325,7 @@ END;
 //
 DELIMITER ;
 
---To get attendance percentage and eligibility for when a subject has theory and practical for each subject as separate 
+14. To get attendance percentage and eligibility for when a subject has theory and practical for each subject as separate 
 
 DELIMITER // 
 CREATE PROCEDURE Get_att_Elig_For_Theo_Or_Prac_Sub(ccode CHAR(7),t VARCHAR(25))
@@ -347,7 +347,7 @@ END;
 //
 DELIMITER ;
 
---To get attendance percentage and eligibility for when a subject has theory and practical for each subject as combined
+15. To get attendance percentage and eligibility for when a subject has theory and practical for each subject as combined
 
 DELIMITER // 
 CREATE PROCEDURE Get_att_Elig_For_Theo_And_Prac_Sub(ccode CHAR(7))
@@ -367,7 +367,7 @@ END;
 //
 DELIMITER ;
 
---`To get attendance percentage and eligibity for when a subject has theory and practical for each subject as separate(with medicals)
+16.`To get attendance percentage and eligibity for when a subject has theory and practical for each subject as separate(with medicals)
 
 DELIMITER // 
 CREATE PROCEDURE Get_att_Elig_For_Theo_Or_Prac_Sub_Medic(ccode CHAR(7),t VARCHAR(25))
@@ -389,7 +389,7 @@ END;
 //
 DELIMITER ;
 
---To get attendance percentage and eligibility for when a subject has theory and practical for each subject as combined(with medicals)
+17. To get attendance percentage and eligibility for when a subject has theory and practical for each subject as combined(with medicals)
 
 DELIMITER // 
 CREATE PROCEDURE Get_att_Elig_For_Theo_And_Prac_Sub_Medic(ccode CHAR(7))
