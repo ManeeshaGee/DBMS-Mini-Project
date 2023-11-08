@@ -76,18 +76,14 @@ FROM final_exam_result fm;
 
 Get student grades course_code 
 
+
 DELIMITER //
 
 CREATE PROCEDURE GetStudentGradesByCourse(IN courseCode CHAR(7))
 BEGIN
-    SELECT DISTINCT s.reg_no, s.student_grade
+    SELECT s.reg_no, s.student_grade
     FROM StudentGrades s
-    WHERE EXISTS (
-        SELECT 1
-        FROM final_exam_result fm
-        WHERE fm.reg_no = s.reg_no
-        AND fm.course_code = courseCode
-    );
+    WHERE s.course_code = courseCode;
 END;
 //
 
