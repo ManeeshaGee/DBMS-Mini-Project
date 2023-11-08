@@ -109,7 +109,7 @@ DELIMITER //
 CREATE PROCEDURE GetSummaryofAttendanceGivingRegistrationNumber(IN regno CHAR(6))
 BEGIN
      SELECT A.reg_no,c.course_code,A.type,
-    (SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/c.lecture_hours) AS Attendance_percentage,
+    (SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/c.lecture_hours)*100 AS Attendance_percentage,
     CASE WHEN(SUM(CASE WHEN A.status = "Present" THEN A.lecture_time_per_session ELSE 0 END)/(c.lecture_hours))*100 >= 80.00 THEN 'Eligibity' ELSE 'NOT Eligibity' END AS Eligibity 
     FROM attendance A
     JOIN course_unit c ON A.course_code = c.course_code
